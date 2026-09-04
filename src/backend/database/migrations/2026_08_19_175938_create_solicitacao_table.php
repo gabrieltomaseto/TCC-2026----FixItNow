@@ -37,3 +37,5 @@ Schema::create('solicitacao', function (Blueprint $table) {
         Schema::dropIfExists('solicitacao');
     }
 };
+
+// 

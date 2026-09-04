@@ -28,3 +28,5 @@ Schema::create('pagamentos', function (Blueprint $table) {
         Schema::dropIfExists('pagamentos');
     }
 };
+
+// 

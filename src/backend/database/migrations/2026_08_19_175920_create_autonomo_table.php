@@ -28,3 +28,5 @@ Schema::create('autonomo', function (Blueprint $table) {
         Schema::dropIfExists('autonomo');
     }
 };
+
+// 

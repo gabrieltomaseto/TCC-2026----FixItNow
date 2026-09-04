@@ -30,3 +30,5 @@ Schema::create('sevicos', function (Blueprint $table) {
         Schema::dropIfExists('sevicos');
     }
 };
+
+// 

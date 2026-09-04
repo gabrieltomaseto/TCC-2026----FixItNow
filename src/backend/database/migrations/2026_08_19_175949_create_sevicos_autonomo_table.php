@@ -30,3 +30,5 @@ Schema::create('servico_autonomo', function (Blueprint $table) {
         Schema::dropIfExists('sevicos_autonomo');
     }
 };
+
+// 

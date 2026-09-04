@@ -30,3 +30,5 @@ Schema::create('avaliacao', function (Blueprint $table) {
         Schema::dropIfExists('avaliacao');
     }
 };
+
+// 
