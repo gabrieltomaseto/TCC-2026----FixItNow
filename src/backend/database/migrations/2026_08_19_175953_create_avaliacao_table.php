@@ -13,17 +13,11 @@ return new class extends Migration
     {
 Schema::create('avaliacao', function (Blueprint $table) {
     $table->id('id_avaliacao');
-
     $table->decimal('nota', 3, 1);
     $table->text('comentarios')->nullable();
-
     $table->unsignedBigInteger('id_solicitacao')->nullable();
-
     $table->timestamps();
-
-    $table->foreign('id_solicitacao')
-        ->references('id_solicitacao')
-        ->on('solicitacao');
+    $table->foreign('id_solicitacao')->references('id_solicitacao')->on('solicitacao');
 });
 
     }
@@ -36,3 +30,5 @@ Schema::create('avaliacao', function (Blueprint $table) {
         Schema::dropIfExists('avaliacao');
     }
 };
+
+// 

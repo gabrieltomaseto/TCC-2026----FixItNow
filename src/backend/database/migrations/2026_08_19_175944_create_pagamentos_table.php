@@ -13,11 +13,9 @@ return new class extends Migration
     {
 Schema::create('pagamentos', function (Blueprint $table) {
     $table->id('id_pagamento');
-
     $table->decimal('debito', 10, 2)->nullable();
     $table->decimal('credito', 10, 2)->nullable();
     $table->decimal('pix', 10, 2)->nullable();
-
     $table->timestamps();
 });
     }
@@ -30,3 +28,5 @@ Schema::create('pagamentos', function (Blueprint $table) {
         Schema::dropIfExists('pagamentos');
     }
 };
+
+// 

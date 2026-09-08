@@ -31,3 +31,5 @@ Schema::create('empresas', function (Blueprint $table) {
         Schema::dropIfExists('empresas');
     }
 };
+
+// 

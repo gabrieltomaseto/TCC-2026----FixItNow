@@ -13,7 +13,6 @@ return new class extends Migration
     {
 Schema::create('solicitacao', function (Blueprint $table) {
     $table->id('id_solicitacao');
-
     $table->date('data_solicitacao');
     $table->string('descricao_problema', 50);
     $table->string('status', 50);
@@ -24,16 +23,9 @@ Schema::create('solicitacao', function (Blueprint $table) {
     $table->date('data_fim')->nullable();
     $table->unsignedBigInteger('id_autonomo')->nullable();
     $table->unsignedBigInteger('id_avaliacao')->nullable();
-
     $table->timestamps();
 
-    $table->foreign('id_empresa')
-        ->references('id_empresa')
-        ->on('empresas');
-
-    $table->foreign('id_servico')
-        ->references('id_SERVICO')
-        ->on('sevicos');
+    $table->foreign('id_empresa') ->references('id_empresa')->on('empresas');$table->foreign('id_servico')->references('id_SERVICO')->on('sevicos');
 });
     }
 
@@ -45,3 +37,5 @@ Schema::create('solicitacao', function (Blueprint $table) {
         Schema::dropIfExists('solicitacao');
     }
 };
+
+// 
