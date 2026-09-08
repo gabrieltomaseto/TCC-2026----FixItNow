@@ -1,3 +1,4 @@
+import { btn } from "../Mock's/mockData";
 import Botao from "./Button";
 
 
@@ -11,10 +12,15 @@ function BarraNav() {
 
         <div className="border border-green-500 py-4">
           
-          <Botao href='#inicio' name='Inicio'/>
-          <Botao href='#contato' name='Contato'/>
-          <Botao href='#' name='Serviços'/>
-          <Botao href='#' name='Configurações'/>
+          {btn.map(item => (
+            <Botao
+
+            key= {item.id}
+            href= {item.href}
+            name= {item.nome}
+
+            />
+          ))}
 
 
         </div>
