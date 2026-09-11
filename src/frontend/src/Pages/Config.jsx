@@ -1,4 +1,6 @@
+
 import { useState } from "react"
+
 
 function Config() {
     const [modo, setModo] = useState("claro")
@@ -24,6 +26,9 @@ function Config() {
     }
 
     return (
+       
+         
+
         <main className={`${tema} ${tamanho} ${contraste} min-h-screen p-6 transition-colors`}>
             <div className="mx-auto max-w-2xl">
                 <h1 className="text-4xl font-bold">Configurações <span className="text-green-500">FIX IT</span> Now</h1>
@@ -106,6 +111,8 @@ function Config() {
                 </form>
             </div>
         </main>
+   
+    
     )
 }
 

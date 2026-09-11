@@ -36,5 +36,11 @@ export const btn = [
         nome: "Configurações",
         href: "#",
         
+    },
+    {
+
+        id:5,
+        nome:"Perfil",
+        href:"#",
     }
 ]

@@ -1,13 +1,14 @@
-
-import BarraNav from "./Components/BarraNav";
 import ConteudoMain from "./Components/ConteudoMain";
 import Rodape from "./Components/Rodape";
-import Cadastro from "./Components/Cadastro";
-import SelectUser from "./Components/SelectUser"; 
-import Config from "./Pages/Config";
+import CadastroEmp from "./Pages/CadastroEmp";
+import CadastroAut from "./Pages/CadastroAut";
+import SelectUser from "./Pages/SelectUser"; 
 
+import BarraNav from "./Components/BarraNav";
 
 import Historico from "./Pages/Historico";
+import Config from "./Pages/Config";
+import Perfil from "./Pages/Perfil";
 
 function App() {
 
@@ -15,11 +16,12 @@ function App() {
   <>
  
     <div className="flex flex-col min-h-screen bg-gray-50">
+      
       <header className="bg-white shadow-md sticky top-0 z-50">
         <BarraNav />
       </header>
-
-      <main id="inicio" className="flex-grow">
+      
+      <main id="inicio">
         <ConteudoMain />
       </main>
 
@@ -27,12 +29,16 @@ function App() {
         <Rodape />
       </footer>
         
-        <Cadastro/>
+        <CadastroEmp/>
+        <CadastroAut/>
         <SelectUser/>
+
         <Config/>
         <Historico />
+        <Perfil/>
+       
     </div>
-   
+  
 
 
     

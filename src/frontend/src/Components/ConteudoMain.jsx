@@ -20,7 +20,7 @@ function ConteudoMain() {
              <p className="text-lg">Somos referência em agilidade de trabalho e de custo e beneficio.</p>      
 
              
-      <CardConteudo name='Sua manutenção aqui' img='https://tse2.mm.bing.net/th/id/OIP.tPA7TR3nLF2O77Fck3g-egAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3'/>                            
+      <CardConteudo name='Autonômos recomendados' img='https://tse2.mm.bing.net/th/id/OIP.tPA7TR3nLF2O77Fck3g-egAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3'/>                            
         </div>
 
       <div className="flex flex-col p-4 items-start">

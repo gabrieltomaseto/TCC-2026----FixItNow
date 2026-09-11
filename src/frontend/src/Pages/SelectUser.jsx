@@ -18,14 +18,7 @@ function SelectUser() {
               type="submit" 
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded transition-colors"
             >
-              <a href="#" className="no-underline">Administrador</a>
-            </button>
-
-            <button 
-              type="submit" 
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded transition-colors"
-            >
-              <a href="#" className="no-underline">Usuário</a>
+              <a href="#" className="no-underline">Autonômo</a>
             </button>
 
             <button 
