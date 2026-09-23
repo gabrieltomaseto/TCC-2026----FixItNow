@@ -14,6 +14,7 @@ function BarraNav() {
           <Botao href='#' name='Sobre'/>
           <Botao href='#contato' name='Contato'/>
           <Botao href='#' name='Serviços'/>
+          <Botao href='#' name='Configurações'/>
 
         </div>
         <div className="flex items-center">
