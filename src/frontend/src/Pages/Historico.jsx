@@ -1,9 +1,9 @@
 function Historico (){
     const historicoSolicitacoes = [
-        { tipoServico: 'Manutenção', data: '2023-10-01', status: 'Não aceita', custo: 'R$ 150,00' },
-        { tipoServico: 'Suporte', data: '2023-10-02', status: 'Em andamento', custo: 'R$ 100,00' },
-        { tipoServico: 'Manutenção', data: '2023-10-05', status: 'Concluída', custo: 'R$ 200,00' },
-        { tipoServico: 'Suporte', data: '2023-10-08', status: 'Finalizada', custo: 'R$ 150,00' },
+        { tipoServico: 'Manutenção', data: '01-10-2023', status: 'Não aceita', custo: 'R$ 150,00' },
+        { tipoServico: 'Suporte', data: '02-10-2023', status: 'Em andamento', custo: 'R$ 100,00' },
+        { tipoServico: 'Manutenção', data: '05-10-2023', status: 'Concluída', custo: 'R$ 200,00' },
+        { tipoServico: 'Suporte', data: '08-10-2023', status: 'Finalizada', custo: 'R$ 150,00' },
     ];
 
     return(
