@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class AutonomoController extends Controller
 {
-    // GET /api/autonomos
+    // GET 
     public function index()
     {
         return response()->json([
@@ -15,7 +15,7 @@ class AutonomoController extends Controller
         ], 200);
     }
 
-    // POST /api/autonomos
+    // POST 
     public function store(Request $request)
     {
         $dados = $request->all();
@@ -26,7 +26,7 @@ class AutonomoController extends Controller
         ], 201);
     }
 
-    // GET /api/autonomos/{id}
+    // GET 
     public function show($id)
     {
         return response()->json([
@@ -34,7 +34,7 @@ class AutonomoController extends Controller
         ], 200);
     }
 
-    // DELETE /api/autonomos/{id}
+    // DELETE 
     public function destroy($id)
     {
         return response()->json([

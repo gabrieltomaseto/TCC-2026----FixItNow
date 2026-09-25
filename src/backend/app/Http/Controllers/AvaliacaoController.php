@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 class AvaliacaoController extends Controller
 {
-    // GET /api/avaliacoes
+    // GET 
     public function index()
     {
         return response()->json([
@@ -12,7 +12,7 @@ class AvaliacaoController extends Controller
         ], 200);
     }
 
-    // POST /api/avaliacoes
+    // POST 
     public function store(Request $request)
     {
         $dados = $request->all();
@@ -23,7 +23,7 @@ class AvaliacaoController extends Controller
         ], 201);
     }
 
-    // GET /api/avaliacoes/{id}
+    // GET 
     public function show($id)
     {
         return response()->json([
@@ -31,7 +31,7 @@ class AvaliacaoController extends Controller
         ], 200);
     }
 
-    // DELETE /api/avaliacoes/{id}
+    // DELETE 
     public function destroy($id)
     {
         return response()->json([
