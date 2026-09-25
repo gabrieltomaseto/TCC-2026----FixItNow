@@ -77,11 +77,11 @@ function Dashboard() {
         <header className="flex items-center justify-between mb-6">
           <div>
             <p className="text-gray-500">
-              Bem-vindo novamente!
+              Bem-vindo novamente
             </p>
 
             <h2 className="text-3xl font-bold text-gray-800">
-              Olá, Matheus 👋
+              Olá Matheus 👋
             </h2>
           </div>
 
