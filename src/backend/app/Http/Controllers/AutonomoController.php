@@ -2,43 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Autonomo;
 use Illuminate\Http\Request;
 
 class AutonomoController extends Controller
 {
-    // GET /api/autonomos
-    public function index()
-    {
-        return response()->json([
-            ['id' => 1, 'nome' => 'João Silva', 'especialidade' => 'Eletricista'],
-            ['id' => 2, 'nome' => 'Maria Oliveira', 'especialidade' => 'Encanadora']
-        ], 200);
-    }
-
-    // POST /api/autonomos
+    // CREATE 
     public function store(Request $request)
     {
-        $dados = $request->all();
+        $autonomo = Autonomo::create($request->all());
 
-        return response()->json([
-            'mensagem' => 'Profissional autônomo cadastrado com sucesso!',
-            'dados' => $dados
-        ], 201);
+        return response()->json($autonomo, 201);
     }
 
-    // GET /api/autonomos/{id}
+    // READ
+    public function index()
+    {
+        $autonomos = Autonomo::all();
+
+        return response()->json($autonomos, 200);
+    }
+
+    // READ 
     public function show($id)
     {
-        return response()->json([
-            'mensagem' => 'Buscando autônomo de ID: ' . $id
-        ], 200);
+        $autonomo = Autonomo::findOrFail($id);
+
+        return response()->json($autonomo, 200);
     }
 
-    // DELETE /api/autonomos/{id}
+    // UPDATE 
+    public function update(Request $request, $id)
+    {
+        $autonomo = Autonomo::findOrFail($id);
+
+        $autonomo->update($request->all());
+
+        return response()->json($autonomo, 200);
+    }
+
+    // DELETE
     public function destroy($id)
     {
+        $autonomo = Autonomo::findOrFail($id);
+
+        $autonomo->delete();
+
         return response()->json([
-            'mensagem' => 'Autônomo de ID ' . $id . ' removido com sucesso!'
+            'mensagem' => 'Autônomo apagado com sucesso.'
         ], 200);
     }
 }

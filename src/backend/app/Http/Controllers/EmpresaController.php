@@ -2,44 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
 use Illuminate\Http\Request;
 
 class EmpresaController extends Controller
 {
-    // GET /api/empresas
-    public function index()
-    {
-        // Retorna a listagem simulada envelopada em JSON
-        return response()->json([
-            ['id' => 1, 'nome' => 'Empresa A', 'servico' => 'Manutenção']
-        ], 200);
-    }
-
-    // POST /api/empresas
+    // CREATE
     public function store(Request $request)
     {
-        // Captura o payload JSON enviado pelo cliente
-        $dados = $request->all();
+        $empresa = Empresa::create($request->all());
 
-        return response()->json([
-            'mensagem' => 'Empresa cadastrada com sucesso!',
-            'dados' => $dados
-        ], 201); // Status Code 201 Created
+        return response()->json($empresa, 201);
     }
 
-    // GET /api/empresas/{id}
+    // READ
+    public function index()
+    {
+        $empresas = Empresa::all();
+
+        return response()->json($empresas, 200);
+    }
+
+    // READ ONE
     public function show($id)
     {
-        return response()->json([
-            'mensagem' => 'Buscando empresa de ID: ' . $id
-        ], 200);
+        $empresa = Empresa::findOrFail($id);
+
+        return response()->json($empresa, 200);
     }
 
-    // DELETE /api/empresas/{id}
+    // UPDATE
+    public function update(Request $request, $id)
+    {
+        $empresa = Empresa::findOrFail($id);
+
+        $empresa->update($request->all());
+
+        return response()->json($empresa, 200);
+    }
+
+    // DELETE
     public function destroy($id)
     {
+        $empresa = Empresa::findOrFail($id);
+
+        $empresa->delete();
+
         return response()->json([
-            'mensagem' => 'Empresa ' . $id . ' removida com sucesso!'
+            'mensagem' => 'Empresa apagada com sucesso.'
         ], 200);
     }
 }

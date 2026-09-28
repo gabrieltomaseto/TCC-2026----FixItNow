@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Autonomo extends Model
+class Empresa extends Model
 {
+    protected $table = 'empresas';
+
     protected $fillable = [
         'nome',
-        'cpf',
+        'cnpj',
+        'endereco',
         'telefone',
         'email',
-        'especialidade',
-        'disponibilidade',
     ];
 }

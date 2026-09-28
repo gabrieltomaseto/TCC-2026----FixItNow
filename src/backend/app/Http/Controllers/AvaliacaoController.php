@@ -1,41 +1,55 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Avaliacao;
 use Illuminate\Http\Request;
+
 class AvaliacaoController extends Controller
 {
-    // GET /api/avaliacoes
-    public function index()
-    {
-        return response()->json([
-            ['id' => 1, 'nota' => 5, 'comentario' => 'Ótimo atendimento, recomendo!', 'prestador_id' => 1]
-        ], 200);
-    }
-
-    // POST /api/avaliacoes
+    // CREATE
     public function store(Request $request)
     {
-        $dados = $request->all();
+        $avaliacao = Avaliacao::create($request->all());
 
-        return response()->json([
-            'mensagem' => 'Avaliação enviada com sucesso!',
-            'dados' => $dados
-        ], 201);
+        return response()->json($avaliacao, 201);
     }
 
-    // GET /api/avaliacoes/{id}
+    // READ ALL
+    public function index()
+    {
+        $avaliacoes = Avaliacao::all();
+
+        return response()->json($avaliacoes, 200);
+    }
+
+    // READ ONE
     public function show($id)
     {
-        return response()->json([
-            'mensagem' => 'Buscando avaliação de ID: ' . $id
-        ], 200);
+        $avaliacao = Avaliacao::findOrFail($id);
+
+        return response()->json($avaliacao, 200);
     }
 
-    // DELETE /api/avaliacoes/{id}
+    // UPDATE
+    public function update(Request $request, $id)
+    {
+        $avaliacao = Avaliacao::findOrFail($id);
+
+        $avaliacao->update($request->all());
+
+        return response()->json($avaliacao, 200);
+    }
+
+    // DELETE
     public function destroy($id)
     {
+        $avaliacao = Avaliacao::findOrFail($id);
+
+        $avaliacao->delete();
+
         return response()->json([
-            'mensagem' => 'Avaliação ID ' . $id . ' removida!'
+            'mensagem' => 'Avaliação apagada com sucesso.'
         ], 200);
     }
 }

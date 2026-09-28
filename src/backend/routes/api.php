@@ -1,48 +1,104 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EmpresaController;
-use App\Http\Controllers\AutonomoController;
+use Illuminate\Http\Request;
 use App\Http\Controllers\ServicoController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AutonomoController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\SolicitacaoController;
 use App\Http\Controllers\PagamentoController;
+use App\Http\Controllers\ServicoAutonomoController;
 use App\Http\Controllers\AvaliacaoController;
 
-// Rotas de Empresa
-Route::prefix('/empresas')->group(function () {
-    Route::get('/', [EmpresaController::class, 'index']);
-    Route::post('/', [EmpresaController::class, 'store']);
-    Route::get('/{id}', [EmpresaController::class, 'show']);
-    Route::delete('/{id}', [EmpresaController::class, 'destroy']);
-});
 
-// Rotas de Autônomo
-Route::prefix('/autonomos')->group(function () {
-    Route::get('/', [AutonomoController::class, 'index']);
-    Route::post('/', [AutonomoController::class, 'store']);
-    Route::get('/{id}', [AutonomoController::class, 'show']);
-});
 
-// Rotas de Serviço
-Route::prefix('/servicos')->group(function () {
-    Route::get('/', [ServicoController::class, 'index']);
-    Route::post('/', [ServicoController::class, 'store']);
-});
+// Serviço
+Route::prefix('servicos')
+    ->controller(ServicoController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
 
-// Rotas de Solicitação
-Route::prefix('/solicitacoes')->group(function () {
-    Route::get('/', [SolicitacaoController::class, 'index']);
-    Route::post('/', [SolicitacaoController::class, 'store']);
-});
+// Autonomo
+Route::prefix('autonomos')
+    ->controller(AutonomoController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
 
-// Rotas de Pagamento
-Route::prefix('/pagamentos')->group(function () {
-    Route::get('/', [PagamentoController::class, 'index']);
-    Route::post('/', [PagamentoController::class, 'store']);
-});
+// Empresa
+Route::prefix('empresas')
+    ->controller(EmpresaController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
 
-// Rotas de Avaliação
-Route::prefix('/avaliacoes')->group(function () {
-    Route::get('/', [AvaliacaoController::class, 'index']);
-    Route::post('/', [AvaliacaoController::class, 'store']);
-});
+// Solicitação - precisa dar post em empresa, servico e autonomo no sql primeiro e usar os id.
+Route::prefix('solicitacoes')
+    ->controller(SolicitacaoController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
+
+// Pagamento
+
+Route::prefix('pagamentos')
+    ->controller(PagamentoController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
+
+    // Serviço_autonomo - Tabla associativa
+
+    Route::prefix('servicos-autonomos')
+    ->controller(ServicoAutonomoController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+
+        Route::get(
+            '/{id_servico}/{id_autonomo}',
+            'show'
+        );
+
+        Route::put(
+            '/{id_servico}/{id_autonomo}',
+            'update'
+        );
+
+        Route::delete(
+            '/{id_servico}/{id_autonomo}',
+            'destroy'
+        );
+    });
+
+    // Avaliação - precisa dar post em avalicoes primeiro e usar o id de servico eu acho
+    Route::prefix('avaliacoes')
+    ->controller(AvaliacaoController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{id}', 'show');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });

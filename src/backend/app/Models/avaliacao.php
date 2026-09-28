@@ -4,7 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class avaliacao extends Model
+class Avaliacao extends Model
 {
-     protected $fillable = ['id_servico', 'nome_servico', 'descricao', 'categoria', 'id_solicitacao'];
+    protected $table = 'avaliacoes';
+
+    protected $fillable = [
+        'nota',
+        'comentarios',
+        'id_solicitacao',
+    ];
 }

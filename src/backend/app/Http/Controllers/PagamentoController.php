@@ -2,42 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pagamento;
 use Illuminate\Http\Request;
 
 class PagamentoController extends Controller
 {
-    // GET /api/pagamentos
-    public function index()
-    {
-        return response()->json([
-            ['id' => 1, 'solicitacao_id' => 1, 'valor' => 150.00, 'metodo' => 'PIX', 'status' => 'Aprovado']
-        ], 200);
-    }
-
-    // POST /api/pagamentos
+    // CREATE
     public function store(Request $request)
     {
-        $dados = $request->all();
+        $pagamento = Pagamento::create($request->all());
 
-        return response()->json([
-            'mensagem' => 'Pagamento processado com sucesso!',
-            'dados' => $dados
-        ], 201);
+        return response()->json($pagamento, 201);
     }
 
-    // GET /api/pagamentos/{id}
+    // READ ALL
+    public function index()
+    {
+        $pagamentos = Pagamento::all();
+
+        return response()->json($pagamentos, 200);
+    }
+
+    // READ ONE
     public function show($id)
     {
-        return response()->json([
-            'mensagem' => 'Buscando comprovante do pagamento ID: ' . $id
-        ], 200);
+        $pagamento = Pagamento::findOrFail($id);
+
+        return response()->json($pagamento, 200);
     }
 
-    // DELETE /api/pagamentos/{id}
+    // UPDATE
+    public function update(Request $request, $id)
+    {
+        $pagamento = Pagamento::findOrFail($id);
+
+        $pagamento->update($request->all());
+
+        return response()->json($pagamento, 200);
+    }
+
+    // DELETE
     public function destroy($id)
     {
+        $pagamento = Pagamento::findOrFail($id);
+
+        $pagamento->delete();
+
         return response()->json([
-            'mensagem' => 'Registro de pagamento ID ' . $id . ' removido!'
+            'mensagem' => 'Pagamento apagado com sucesso.'
         ], 200);
     }
 }
