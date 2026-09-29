@@ -79,11 +79,6 @@ function NovoChamado() {
           </button>
 
           <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
-            ♙
-            <span>Profissionais</span>
-          </button>
-
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
             ☆
             <span>Avaliações</span>
           </button>
