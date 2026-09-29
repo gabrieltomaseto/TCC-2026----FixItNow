@@ -1,5 +1,3 @@
-import './index.css'
-
 function Painel() {
     const solicitacoes = [
     {
@@ -26,6 +24,8 @@ function Painel() {
   ];
 
   return (
+
+    <>
     <div className="min-h-screen bg-gray-50 flex">
       
       {/*SIDEBAR*/}
@@ -51,17 +51,12 @@ function Painel() {
 
           <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
             ▤
-            <span>Minhas solicitações</span>
+            <span>Abrir Chamado</span>
           </button>
 
           <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
             ◷
             <span>Histórico</span>
-          </button>
-
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
-            ♙
-            <span>Profissionais</span>
           </button>
 
           <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
@@ -274,6 +269,7 @@ function Painel() {
       </main>
 
     </div>
+    </>
   );
 }
 

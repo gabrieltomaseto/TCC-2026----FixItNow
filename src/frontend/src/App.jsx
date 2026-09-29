@@ -9,6 +9,8 @@ import BarraNav from "./Components/BarraNav";
 import Historico from "./Pages/Historico";
 import Config from "./Pages/Config";
 import Perfil from "./Pages/Perfil";
+import NovoChamado from "./Pages/NovoChamado";
+import Painel from "./Pages/Painel";
 
 function App() {
 
@@ -34,8 +36,12 @@ function App() {
         <SelectUser/>
 
         <Config/>
+        <Painel/>
+        <NovoChamado/>
         <Historico />
         <Perfil/>
+        
+        
        
     </div>
   

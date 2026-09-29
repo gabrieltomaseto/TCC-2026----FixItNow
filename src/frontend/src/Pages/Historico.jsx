@@ -8,6 +8,65 @@ function Historico (){
 
     return(
 
+    <>
+      <div className="flex">
+
+        <aside className="w-64 bg-slate-950 text-white flex flex-col">
+        
+        <div className="p-6">
+          <h1 className="text-2xl font-bold text-green-500">
+            ● FIX IT NOW
+          </h1>
+
+          <p className="text-sm text-gray-400 mt-1">
+            Portal de Gestão
+          </p>
+        </div>
+
+  
+        <nav className="px-4 space-y-2">
+
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
+            ▦
+            <span>Painel</span>
+          </button>
+
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
+            ▤
+            <span>Abrir Chamado</span>
+          </button>
+
+          <button className="w-full flex items-center gap-3 bg-green-500 text-slate-950 px-4 py-3 rounded-lg font-semibold">
+            ◷
+            <span>Histórico</span>
+          </button>
+
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
+            ♙
+            <span>Profissionais</span>
+          </button>
+
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
+            ☆
+            <span>Avaliações</span>
+          </button>
+
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-slate-800">
+            ⚙
+            <span>Configurações</span>
+          </button>
+
+        </nav>
+
+        <div className="mt-auto p-4">
+          <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-slate-800 rounded-lg">
+          
+            <span>Sair</span>
+          </button>
+        </div>
+
+      </aside>
+
         <div className="min-h-screen bg-zinc-100 text-zinc-800">
             <div className="px-7 pt-7 pb-4 bg-white shadow-sm">
                 <h1 className="text-4xl font-bold text-black">
@@ -108,6 +167,8 @@ function Historico (){
                 </div>
             </div>
         </div>
+      </div>
+    </>
     )
 }
 
