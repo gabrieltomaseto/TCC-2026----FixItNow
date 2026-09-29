@@ -15,4 +15,9 @@ class Empresa extends Model
         'telefone',
         'email',
     ];
+
+    public function usuario()
+    {
+        return $this->hasOne(User::class, 'empresa_id');
+    }
 }

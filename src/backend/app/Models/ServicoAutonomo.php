@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServicoAutonomo extends Model
 {
-    protected $table = 'servicos_autonomo';
+    protected $table = 'servico_autonomos';
 
     public $incrementing = false;
 

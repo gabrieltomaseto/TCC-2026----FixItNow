@@ -9,6 +9,7 @@ use App\Http\Controllers\SolicitacaoController;
 use App\Http\Controllers\PagamentoController;
 use App\Http\Controllers\ServicoAutonomoController;
 use App\Http\Controllers\AvaliacaoController;
+use App\Http\Controllers\AuthController;
 
 
 
@@ -101,4 +102,13 @@ Route::prefix('pagamentos')
         Route::get('/{id}', 'show');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
+    });
+
+// loguin cadastro
+Route::prefix('auth')
+    ->controller(AuthController::class)
+    ->group(function () {
+        Route::post('/empresa/cadastro', 'registerEmpresa');
+        Route::post('/autonomo/cadastro', 'registerAutonomo');
+        Route::post('/login', 'login');
     });

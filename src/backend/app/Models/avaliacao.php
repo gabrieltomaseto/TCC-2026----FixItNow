@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Avaliacao extends Model
 {
-    protected $table = 'avaliacoes';
+    protected $table = 'avaliacaos';
 
     protected $fillable = [
         'nota',
