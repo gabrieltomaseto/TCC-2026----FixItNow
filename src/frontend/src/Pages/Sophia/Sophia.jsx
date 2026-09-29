@@ -3,7 +3,7 @@ import Banner from "./Banner";
 import LinksRapidos from "./LinksRapidos";
 import Comunicados from "./Comunicados";
 
-function App() {
+function Sophia() {
   const nossoSite = "https://";
 
   return (
@@ -21,4 +21,4 @@ function App() {
   );
 }
 
-export default App;
+export default Sophia;
