@@ -1,4 +1,6 @@
 
+import AsidePainel from "../Components/AsidePainel"
+
 function Painel() {
     const solicitacoes = [
     {
@@ -29,55 +31,7 @@ function Painel() {
     <div className="flex min-h-screen flex-col lg:flex-row bg-gray-50">
       
       {/*SIDEBAR*/}
-      <aside className="w-full bg-slate-950 text-white lg:w-64 lg:min-h-screen">
-        
-        <div className="p-4 lg:p-6">
-          <h1 className="text-xl font-bold text-green-500 lg:text-2xl">
-            ● FIX IT NOW
-          </h1>
-
-          <p className="text-xs text-gray-400 mt-1 lg:text-sm">
-            Portal de Gestão
-          </p>
-        </div>
-
-  
-        <nav className="px-3 space-y-1 pb-4 lg:px-4 lg:space-y-2 lg:pb-0">
-
-          <button className="w-full flex items-center gap-3 bg-green-500 text-slate-950 px-4 py-2 rounded-lg font-semibold text-sm lg:py-3">
-            ▦
-            <span>Painel</span>
-          </button>
-
-          <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-300 hover:bg-slate-800 text-sm lg:py-3">
-            ▤
-            <span>Abrir Chamado</span>
-          </button>
-
-          <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-300 hover:bg-slate-800 text-sm lg:py-3">
-            ◷
-            <span>Histórico</span>
-          </button>
-
-          <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-300 hover:bg-slate-800 text-sm lg:py-3">
-            ☆
-            <span>Avaliações</span>
-          </button>
-
-          <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-gray-300 hover:bg-slate-800 text-sm lg:py-3">
-            ⚙
-            <span>Configurações</span>
-          </button>
-
-        </nav>
-
-        <div className="mt-auto border-t border-slate-800 p-4 lg:p-4">
-          <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-300 hover:bg-slate-800 rounded-lg text-sm lg:py-3">
-            <span>Sair</span>
-          </button>
-        </div>
-
-      </aside>
+      <AsidePainel />
 
 
       <main className="flex-1 w-full">

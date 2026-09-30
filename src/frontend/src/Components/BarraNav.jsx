@@ -5,6 +5,8 @@ import Botao from "./Button";
 function BarraNav() {
   
  return (
+
+
     <nav className="bg-gray-800 p-4 w-full ">
       <div className="container mx-auto flex items-center justify-between ">
         <img src="src/imagens/LogoSemNome.png" alt="Logo" className="max-h-20 max-w-60 hidden md:flex " />       

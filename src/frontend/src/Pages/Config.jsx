@@ -1,4 +1,5 @@
 import { useState } from "react"
+import AsidePainel from "../Components/AsidePainel"
 
 function Config() {
     const [modo, setModo] = useState("claro")
@@ -24,7 +25,12 @@ function Config() {
     }
 
     return (
-       <div className={`${tema} ${tamanho} ${contraste} min-h-screen transition-colors`}>
+        <>
+            <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
+
+        <AsidePainel />
+    
+       <div className={`${tema} ${tamanho} ${contraste} min-h-screen  transition-colors`}>
             <div className="mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
                 <h1 className="text-3xl sm:text-4xl font-bold">Configurações <span className="text-green-500">FIX IT</span> Now</h1>
                 <p className="mt-2 text-gray-600 text-sm sm:text-base">Personalize a sua experiência.</p>
@@ -138,6 +144,8 @@ function Config() {
                 </form>
             </div>
         </div>
+    </div>
+    </>
     );
 }
 
