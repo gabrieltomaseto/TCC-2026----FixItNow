@@ -1,25 +1,31 @@
 import { useState } from "react"
+import { useConfig } from "../Context/useConfig"
 import AsidePainel from "../Components/AsidePainel"
 
 function Config() {
-    const [modo, setModo] = useState("claro")
-    const [tamanhoTexto, setTamanhoTexto] = useState("normal")
-    const [altoContraste, setAltoContraste] = useState(false)
-    const [notificacoes, setNotificacoes] = useState(true)
-    const [idioma, setIdioma] = useState("pt-BR")
+    const { 
+        modo, setModo, 
+        tamanhoTexto, setTamanhoTexto, 
+        altoContraste, setAltoContraste, 
+        notificacoes, setNotificacoes,
+        idioma, setIdioma,
+        tema, 
+        tamanho, 
+        contraste 
+    } = useConfig()
     const [salvo, setSalvo] = useState(false)
 
-    const tema = modo === "escuro"
-        ? "bg-gray-900 text-white"
-        : "bg-white text-gray-900"
-    const tamanho = {
-        normal: "text-base",
-        medio: "text-lg",
-        grande: "text-xl",
-    }[tamanhoTexto]
-    const contraste = altoContraste ? "contrast-125" : ""
-
     const handleSalvar = () => {
+        setSalvo(true)
+        setTimeout(() => setSalvo(false), 3000)
+    }
+
+    const handleRestaurar = () => {
+        setModo('claro')
+        setTamanhoTexto('normal')
+        setAltoContraste(false)
+        setNotificacoes(true)
+        setIdioma('pt-BR')
         setSalvo(true)
         setTimeout(() => setSalvo(false), 3000)
     }
@@ -136,6 +142,7 @@ function Config() {
                         </button>
                         <button 
                             type="reset" 
+                            onClick={handleRestaurar}
                             className="flex-1 bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded transition-colors text-sm sm:text-base"
                         >
                             Restaurar padrões

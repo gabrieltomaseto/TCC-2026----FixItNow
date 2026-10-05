@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import { useConfig } from './Context/useConfig'
 import ConteudoMain from "./Components/ConteudoMain";
 import Rodape from "./Components/Rodape";
 import BarraNav from "./Components/BarraNav";
@@ -16,10 +17,14 @@ import SelectUser from "./Pages/SelectUser";
 
 
 function App() {
+  const { modo, tamanho, contraste } = useConfig()
+  
+  const bgColor = modo === "escuro" ? "bg-gray-900" : "bg-gray-50"
+  
   return (
     <>
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <header className="bg-white shadow-md sticky top-0 z-50">
+      <div className={`flex flex-col min-h-screen ${bgColor} ${tamanho} ${contraste}`}>
+        <header className={`${modo === "escuro" ? "bg-gray-800 border-gray-700" : "bg-white"} shadow-md sticky top-0 z-50`}>
           <BarraNav />
         </header>
         
@@ -38,7 +43,7 @@ function App() {
           </Routes>
         </main>
 
-        <footer className="bg-gray-800 text-white text-center py-6 px-4 mt-auto border-t border-gray-700">
+        <footer className={`${modo === "escuro" ? "bg-gray-800 border-gray-700" : "bg-gray-800"} text-white text-center py-6 px-4 mt-auto border-t`}>
           <Rodape />
         </footer>   
       </div>
