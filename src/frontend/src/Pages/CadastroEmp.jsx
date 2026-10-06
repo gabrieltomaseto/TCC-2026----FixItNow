@@ -28,13 +28,28 @@ function CadastroEmp() {
             </label>
              <input 
               type="text" 
-              id="nome" 
-              name="nome"
+              id="endereco" 
+              name="endereco"
               placeholder="Coloque seu endereço aqui" 
               required 
               className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
+           <div>
+            <label htmlFor="cnpj" className="block text-lg font-medium text-gray-700 mb-1">
+              CNPJ:
+            </label>
+            <input 
+              type="text" 
+              id="cnpj" 
+              name="cnpj" 
+              placeholder="Coloque seu CNPJ aqui" 
+              required 
+              className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
 
           <div>
             <label htmlFor="email" className="block text-lg font-medium text-gray-700 mb-1">

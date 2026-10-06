@@ -22,6 +22,22 @@ function CadastroAut() {
             />
           </div>
 
+          
+          <div>
+            <label htmlFor="funcao" className="block text-lg font-medium text-gray-700 mb-1">
+              Função:
+            </label>
+            <input 
+              type="text" 
+              id="funcao" 
+              name="funcao" 
+              placeholder="Coloque sua função aqui" 
+              required 
+              className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+
           <div>
             <label htmlFor="email" className="block text-lg font-medium text-gray-700 mb-1">
               Email:
