@@ -4,42 +4,40 @@ import { Link } from "react-router-dom";
 
 function CadastroAut() {
 
-  const [nome, setNome] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [especialidade, setEspecialidade] = useState("");
-  const [disponibilidade, setDisponibilidade] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [formData, setFormData] = useState({
+    nome: "",
+    cpf: "",
+    telefone: "",
+    especialidade: "",
+    disponibilidade: "",
+    email: "",
+    password: "",
+    password_confirmation: ""
+  });
+
+  function handleChange(e) {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  }
 
   async function cadastrar(e) {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-  "http://127.0.0.1:8000/api/auth/autonomo/cadastro",
-  {
-    nome: nome,
-    cpf: cpf,
-    telefone: telefone,
-    email: email,
-    especialidade: especialidade,
-    disponibilidade: disponibilidade,
-    password: password,
-    password_confirmation: passwordConfirmation
-  }
-)
+        "http://127.0.0.1:8000/api/auth/autonomo/cadastro",
+        formData
+      );
 
       console.log(response.data);
       alert("Autônomo cadastrado com sucesso!");
 
-    }   catch (error) {
-  console.log("ERRO COMPLETO:", error);
-  console.log("MENSAGEM:", error.message);
-  console.log("RESPOSTA:", error.response);
-  alert("Erro: " + error.message);
-}
+    } catch (error) {
+      console.log(error);
+      alert("Erro: " + error.message);
+    }
   }
 
   return (
@@ -48,6 +46,7 @@ function CadastroAut() {
 
         <div className="flex flex-col items-center justify-center mb-6">
           <img src="src/imagens/logo.png" alt="Logo" className="mb-4 h-16" />
+
           <h1 className="text-3xl font-bold text-gray-800">
             Cadastro de Autonômo
           </h1>
@@ -59,12 +58,13 @@ function CadastroAut() {
             <label htmlFor="nome" className="block text-lg font-medium text-gray-700 mb-1">
               Nome:
             </label>
+
             <input
               type="text"
               id="nome"
               name="nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              value={formData.nome}
+              onChange={handleChange}
               placeholder="Coloque seu nome aqui"
               required
               className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -75,12 +75,13 @@ function CadastroAut() {
             <label htmlFor="cpf" className="block text-lg font-medium text-gray-700 mb-1">
               CPF:
             </label>
+
             <input
               type="text"
               id="cpf"
               name="cpf"
-              value={cpf}
-              onChange={(e) => setCpf(e.target.value)}
+              value={formData.cpf}
+              onChange={handleChange}
               placeholder="Coloque seu CPF aqui"
               required
               className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -91,12 +92,13 @@ function CadastroAut() {
             <label htmlFor="telefone" className="block text-lg font-medium text-gray-700 mb-1">
               Telefone:
             </label>
+
             <input
               type="text"
               id="telefone"
               name="telefone"
-              value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
+              value={formData.telefone}
+              onChange={handleChange}
               placeholder="Coloque seu telefone aqui"
               required
               className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -107,12 +109,13 @@ function CadastroAut() {
             <label htmlFor="especialidade" className="block text-lg font-medium text-gray-700 mb-1">
               Especialidade:
             </label>
+
             <input
               type="text"
               id="especialidade"
               name="especialidade"
-              value={especialidade}
-              onChange={(e) => setEspecialidade(e.target.value)}
+              value={formData.especialidade}
+              onChange={handleChange}
               placeholder="Coloque sua especialidade aqui"
               required
               className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -123,12 +126,13 @@ function CadastroAut() {
             <label htmlFor="disponibilidade" className="block text-lg font-medium text-gray-700 mb-1">
               Disponibilidade:
             </label>
+
             <input
               type="text"
               id="disponibilidade"
               name="disponibilidade"
-              value={disponibilidade}
-              onChange={(e) => setDisponibilidade(e.target.value)}
+              value={formData.disponibilidade}
+              onChange={handleChange}
               placeholder="Ex: Segunda a sexta"
               className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -138,12 +142,13 @@ function CadastroAut() {
             <label htmlFor="email" className="block text-lg font-medium text-gray-700 mb-1">
               Email:
             </label>
+
             <input
               type="email"
               id="email"
               name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Coloque seu email aqui"
               required
               className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -154,12 +159,13 @@ function CadastroAut() {
             <label htmlFor="password" className="block text-lg font-medium text-gray-700 mb-1">
               Senha:
             </label>
+
             <input
               type="password"
               id="password"
               name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Coloque sua senha aqui"
               required
               className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -167,15 +173,16 @@ function CadastroAut() {
           </div>
 
           <div>
-            <label htmlFor="passwordConfirmation" className="block text-lg font-medium text-gray-700 mb-1">
+            <label htmlFor="password_confirmation" className="block text-lg font-medium text-gray-700 mb-1">
               Confirmar senha:
             </label>
+
             <input
               type="password"
-              id="passwordConfirmation"
-              name="passwordConfirmation"
-              value={passwordConfirmation}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
+              id="password_confirmation"
+              name="password_confirmation"
+              value={formData.password_confirmation}
+              onChange={handleChange}
               placeholder="Confirme sua senha"
               required
               className="w-full border border-gray-400 rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -193,6 +200,7 @@ function CadastroAut() {
 
         <p className="text-center text-gray-700 mt-4">
           Já tem uma conta?{" "}
+
           <Link
             to="/painel"
             className="text-blue-600 hover:text-blue-800 font-semibold"
