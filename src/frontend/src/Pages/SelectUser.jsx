@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+
+
 function SelectUser() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-200 p-4">
@@ -6,7 +9,7 @@ function SelectUser() {
           <img src="src/imagens/logo.png" alt="Logo" className="h-16 mb-4" />
         </div>
 
-        <form className="space-y-4">
+       
           <div className="mb-6">
             <label htmlFor="user" className="text-2xl font-bold text-gray-800">
               Selecione o tipo de usuário:
@@ -14,21 +17,11 @@ function SelectUser() {
           </div>
 
           <nav className="flex flex-col space-y-3">
-            <button 
-              type="submit" 
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded transition-colors"
-            >
-              <a href="#" className="no-underline">Autonômo</a>
-            </button>
+           <Link to="/cadastro-autorizado" className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded transition-colors text-center">   Autônomo   </Link>
 
-            <button 
-              type="submit" 
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded transition-colors"
-            >
-              <a href="#" className="no-underline">Empresa</a>
-            </button>
+       <Link to="/cadastro-empresa"className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded transition-colors text-center">Empresa</Link>
           </nav>
-        </form>
+   
       </div>
     </div>
   );

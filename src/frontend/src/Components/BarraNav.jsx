@@ -1,7 +1,7 @@
 import { btn } from "../Mock's/mockData";
 import Botao from "./Button";
 import { useConfig } from "../Context/useConfig";
-
+import { Link } from "react-router-dom";
 
 function BarraNav() {
   const { modo } = useConfig()
@@ -31,8 +31,19 @@ function BarraNav() {
 
         </div>
         <div className="flex items-center">
-             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4" href="#">Cadastrar</button>
-            <button className="border border-green-500 hover:bg-green-700 hover:text-white transition transform scale-100 text-green-500 font-bold py-2 px-4 rounded ml-4"  href="#">Entrar</button>
+          <Link 
+  to="/selecionar-usuario"
+  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
+>
+  Cadastrar
+</Link>
+
+<Link 
+  to="/painel"
+  className="border border-green-500 hover:bg-green-700 hover:text-white transition transform scale-100 text-green-500 font-bold py-2 px-4 rounded ml-4"
+>
+  Entrar
+</Link>
         </div>
       </div>
     </nav>
