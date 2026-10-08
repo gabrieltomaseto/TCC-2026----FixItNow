@@ -35,8 +35,8 @@ function CadastroAut() {
       alert("Autônomo cadastrado com sucesso!");
 
     } catch (error) {
-      console.log(error);
-      alert("Erro: " + error.message);
+      console.error(error);
+      alert('Erro ao cadastrar. Verifique os dados.');
     }
   }
 
