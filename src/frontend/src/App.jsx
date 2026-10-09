@@ -28,7 +28,7 @@ function App() {
           <BarraNav />
         </header>
         
-        <main id="inicio" className="grow">
+        <main id="inicio" className="flex-grow">
           <Routes>
             <Route path="/" element={<ConteudoMain />} />
             <Route path="/painel" element={<Painel />} />

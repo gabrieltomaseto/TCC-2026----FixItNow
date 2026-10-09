@@ -36,8 +36,8 @@ function Config() {
 
         <AsidePainel />
     
-       <div className={`${tema} ${tamanho} ${contraste} min-h-screen  transition-colors`}>
-            <div className="mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
+      <div className={`${tema} ${tamanho} ${contraste} flex-1 min-h-screen transition-colors`}>
+          <div className="mx-auto max-w-4xl w-full p-4 sm:p-6 lg:p-8">
                 <h1 className="text-3xl sm:text-4xl font-bold">Configurações <span className="text-green-500">FIX IT</span> Now</h1>
                 <p className="mt-2 text-gray-600 text-sm sm:text-base">Personalize a sua experiência.</p>
 
