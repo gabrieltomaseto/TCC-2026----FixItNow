@@ -1,12 +1,20 @@
 import CardConteudo from "../Components/CardConteudo";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 function Perfil() {
   const [nota, setNota] = useState(0);
 
   function avaliar(e) {
     e.preventDefault();
-    alert(`Você avaliou com ${nota} estrelas!`);
+  
+     Swal.fire({
+    title: "Avaliação enviada!",
+    text: `Você avaliou a empresa com ${nota} estrelas!`,
+    icon: "success",
+    confirmButtonText: "Fechar",
+    confirmButtonColor: "#22c55e",
+  });
   }
 
   return (

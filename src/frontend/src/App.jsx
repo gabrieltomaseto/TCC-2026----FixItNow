@@ -4,6 +4,7 @@ import ConteudoMain from "./Components/ConteudoMain";
 import Rodape from "./Components/Rodape";
 import BarraNav from "./Components/BarraNav";
 
+
 // Pages
 import Painel from "./Pages/Painel";
 import NovoChamado from "./Pages/NovoChamado";
@@ -13,7 +14,7 @@ import Perfil from "./Pages/Perfil";
 import CadastroAut from "./Pages/CadastroAut";
 import CadastroEmp from "./Pages/CadastroEmp";
 import SelectUser from "./Pages/SelectUser";
-
+import Sophia from "./Pages/Sophia";
 
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
           <Rodape />
         </footer>   
       </div>
+
+      <Sophia />
     </>
   );
 }
