@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Solicitacao extends Model
 {
-    protected $table = 'solicitacaos';
+    protected $table = 'solicitacoes';
 
     protected $fillable = [
         'data_solicitacao',
@@ -18,4 +18,14 @@ class Solicitacao extends Model
         'data_inicio',
         'data_fim',
     ];
+
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'id_empresa');
+    }
+
+    public function servico()
+    {
+        return $this->belongsTo(Servico::class, 'id_servico');
+    }
 }
