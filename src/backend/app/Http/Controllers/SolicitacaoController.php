@@ -2,43 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Solicitacao;
 use Illuminate\Http\Request;
 
 class SolicitacaoController extends Controller
 {
-    // GET
-    public function index()
-    {
-        return response()->json([
-            ['id' => 1, 'cliente' => 'Carlos Lima', 'servico_id' => 1, 'status' => 'Pendente'],
-            ['id' => 2, 'cliente' => 'Ana Costa', 'servico_id' => 2, 'status' => 'Em Andamento']
-        ], 200);
-    }
-
-    // POST 
+    // CREATE
     public function store(Request $request)
     {
-        $dados = $request->all();
+        $solicitacao = Solicitacao::create($request->all());
 
-        return response()->json([
-            'mensagem' => 'Solicitação de serviço criada com sucesso!',
-            'dados' => $dados
-        ], 201);
+        return response()->json($solicitacao, 201);
     }
 
-    // GET
+    // READ ALL
+    public function index()
+    {
+        $solicitacoes = Solicitacao::all();
+
+        return response()->json($solicitacoes, 200);
+    }
+
+    // READ 
     public function show($id)
     {
-        return response()->json([
-            'mensagem' => 'Buscando solicitação de ID: ' . $id
-        ], 200);
+        $solicitacao = Solicitacao::findOrFail($id);
+
+        return response()->json($solicitacao, 200);
+    }
+
+    // UPDATE
+    public function update(Request $request, $id)
+    {
+        $solicitacao = Solicitacao::findOrFail($id);
+
+        $solicitacao->update($request->all());
+
+        return response()->json($solicitacao, 200);
     }
 
     // DELETE
     public function destroy($id)
     {
+        $solicitacao = Solicitacao::findOrFail($id);
+
+        $solicitacao->delete();
+
         return response()->json([
-            'mensagem' => 'Solicitação de ID ' . $id . ' cancelada/removida com sucesso!'
+            'mensagem' => 'Solicitação apagada com sucesso.'
         ], 200);
     }
 }

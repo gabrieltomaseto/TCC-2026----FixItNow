@@ -4,9 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class autonomo extends Model
+class Autonomo extends Model
 {
-    protected $fillable = ['id_autonomo', 'nome', 'cpf', 'telefone', 'email', 'especialidade', 'disponibilidade' ];
-
+    protected $fillable = [
+        'nome',
+        'cpf',
+        'telefone',
+        'email',
+        'especialidade',
+        'disponibilidade',
+    ];
 }
-

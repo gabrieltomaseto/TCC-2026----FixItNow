@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class solicitacoes extends Model
+{
+    protected $table = 'solicitacoes';
+
+    protected $fillable = [
+        'data_solicitacao',
+        'descricao_problema',
+        'status',
+        'id_empresa',
+        'id_servico',
+        'id_autonomo',
+        'data_inicio',
+        'data_fim',
+    ];
+}
