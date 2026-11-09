@@ -1,0 +1,24 @@
+# Sistema operacional e editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Dependências e builds
+node_modules/
+dist/
+
+# Laravel
+src/backend/vendor/
+src/backend/.env
+src/backend/storage/*.key
+src/backend/storage/app/public/
+src/backend/storage/framework/cache/data/
+src/backend/storage/framework/sessions/
+src/backend/storage/framework/testing/
+src/backend/storage/framework/views/
+src/backend/storage/logs/*.log
+
+# Banco local e arquivos temporários
+*.sqlite-journal
+*.log

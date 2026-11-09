@@ -1,16 +1,24 @@
-# React + Vite
+# FixItNow — frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface web do FixItNow, construída com React, Vite, React Router e Tailwind CSS.
 
-Currently, two official plugins are available:
+## Executar
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm ci
+npm run dev
+```
 
-## React Compiler
+## Validar
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm run lint
+npm run test
+npm run build
+```
 
-## Expanding the ESLint configuration
+As telas ficam em `src/Pages`, os componentes reutilizáveis em `src/Components` e as preferências globais em `src/Context`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Use Node.js 20.19+ ou 22.12+. O Laravel deve estar ativo em `http://127.0.0.1:8000`; o Vite serve a interface em `http://localhost:5173` e encaminha `/api` e `/storage` à API. Em produção, configure `VITE_API_URL=https://sua-api/api` antes do build e configure a origem correspondente no CORS do Laravel.
+
+A revisão integra avaliações por solicitação, descrição, todos os campos do chamado, métricas/histórico reais e status de pedidos sem redesenhar as telas. Veja [RELATORIO_FINAL.md](../../RELATORIO_FINAL.md) para instruções completas.
