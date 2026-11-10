@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pagamento;
+<<<<<<< HEAD
 use App\Models\Solicitacao;
+=======
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class PagamentoController extends Controller
 {
+<<<<<<< HEAD
     public function store(Request $request)
     {
         $user = $request->user();
@@ -78,4 +82,51 @@ class PagamentoController extends Controller
     {
         return $item->load(['solicitacao.empresa', 'solicitacao.servico', 'solicitacao.autonomo']);
     }
+=======
+    // CREATE
+    public function store(Request $request)
+    {
+        $pagamento = Pagamento::create($request->all());
+
+        return response()->json($pagamento, 201);
+    }
+
+    // READ ALL
+    public function index()
+    {
+        $pagamentos = Pagamento::all();
+
+        return response()->json($pagamentos, 200);
+    }
+
+    // READ ONE
+    public function show($id)
+    {
+        $pagamento = Pagamento::findOrFail($id);
+
+        return response()->json($pagamento, 200);
+    }
+
+    // UPDATE
+    public function update(Request $request, $id)
+    {
+        $pagamento = Pagamento::findOrFail($id);
+
+        $pagamento->update($request->all());
+
+        return response()->json($pagamento, 200);
+    }
+
+    // DELETE
+    public function destroy($id)
+    {
+        $pagamento = Pagamento::findOrFail($id);
+
+        $pagamento->delete();
+
+        return response()->json([
+            'mensagem' => 'Pagamento apagado com sucesso.'
+        ], 200);
+    }
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 }

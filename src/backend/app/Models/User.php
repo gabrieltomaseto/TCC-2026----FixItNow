@@ -8,7 +8,11 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+<<<<<<< HEAD
     use HasApiTokens, Notifiable;
+=======
+    use Notifiable;
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 
     protected $fillable = [
     'name',

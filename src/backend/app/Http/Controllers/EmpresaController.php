@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+<<<<<<< HEAD
 use App\Models\User;
+=======
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 use Illuminate\Http\Request;
 use App\Rules\ValidadoresBrasil;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +14,7 @@ use Illuminate\Validation\Rule;
 
 class EmpresaController extends Controller
 {
+<<<<<<< HEAD
     public function store(Request $request)
     {
         if (!$request->user()) abort(401, 'É necessário estar autenticado.');
@@ -84,4 +88,51 @@ class EmpresaController extends Controller
             abort(403, 'Apenas a conta dona pode alterar esta empresa.');
         }
     }
+=======
+    // CREATE
+    public function store(Request $request)
+    {
+        $empresa = Empresa::create($request->all());
+
+        return response()->json($empresa, 201);
+    }
+
+    // READ
+    public function index()
+    {
+        $empresas = Empresa::all();
+
+        return response()->json($empresas, 200);
+    }
+
+    // READ ONE
+    public function show($id)
+    {
+        $empresa = Empresa::findOrFail($id);
+
+        return response()->json($empresa, 200);
+    }
+
+    // UPDATE
+    public function update(Request $request, $id)
+    {
+        $empresa = Empresa::findOrFail($id);
+
+        $empresa->update($request->all());
+
+        return response()->json($empresa, 200);
+    }
+
+    // DELETE
+    public function destroy($id)
+    {
+        $empresa = Empresa::findOrFail($id);
+
+        $empresa->delete();
+
+        return response()->json([
+            'mensagem' => 'Empresa apagada com sucesso.'
+        ], 200);
+    }
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 }

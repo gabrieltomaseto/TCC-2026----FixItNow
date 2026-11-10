@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Autonomo;
+<<<<<<< HEAD
 use App\Models\User;
+=======
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 use Illuminate\Http\Request;
 use App\Rules\ValidadoresBrasil;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +14,7 @@ use Illuminate\Validation\Rule;
 
 class AutonomoController extends Controller
 {
+<<<<<<< HEAD
     public function store(Request $request)
     {
         if (!$request->user()) abort(401, 'É necessário estar autenticado.');
@@ -88,4 +92,51 @@ class AutonomoController extends Controller
             abort(403, 'Apenas a conta dona pode alterar este autônomo.');
         }
     }
+=======
+    // CREATE 
+    public function store(Request $request)
+    {
+        $autonomo = Autonomo::create($request->all());
+
+        return response()->json($autonomo, 201);
+    }
+
+    // READ
+    public function index()
+    {
+        $autonomos = Autonomo::all();
+
+        return response()->json($autonomos, 200);
+    }
+
+    // READ 
+    public function show($id)
+    {
+        $autonomo = Autonomo::findOrFail($id);
+
+        return response()->json($autonomo, 200);
+    }
+
+    // UPDATE 
+    public function update(Request $request, $id)
+    {
+        $autonomo = Autonomo::findOrFail($id);
+
+        $autonomo->update($request->all());
+
+        return response()->json($autonomo, 200);
+    }
+
+    // DELETE
+    public function destroy($id)
+    {
+        $autonomo = Autonomo::findOrFail($id);
+
+        $autonomo->delete();
+
+        return response()->json([
+            'mensagem' => 'Autônomo apagado com sucesso.'
+        ], 200);
+    }
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 }

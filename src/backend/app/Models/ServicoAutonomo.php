@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServicoAutonomo extends Model
 {
+<<<<<<< HEAD
     protected $table = 'servicos_autonomo';
+=======
+    protected $table = 'servico_autonomos';
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 
     public $incrementing = false;
 
@@ -16,6 +20,7 @@ class ServicoAutonomo extends Model
         'status',
         'nivel_experiencia',
     ];
+<<<<<<< HEAD
 
     public function servico()
     {
@@ -26,4 +31,6 @@ class ServicoAutonomo extends Model
     {
         return $this->belongsTo(Autonomo::class, 'id_autonomo');
     }
+=======
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 }

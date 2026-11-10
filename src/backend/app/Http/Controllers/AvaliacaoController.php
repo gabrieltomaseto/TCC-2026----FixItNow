@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Avaliacao;
+<<<<<<< HEAD
 use App\Models\Solicitacao;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -107,4 +108,55 @@ class AvaliacaoController extends Controller
         $key = trim(preg_replace('/\s+/', ' ', $ascii !== false ? $ascii : $key));
         return ['concluida' => 'Finalizada', 'concluido' => 'Finalizada', 'finalizada' => 'Finalizada', 'finalizado' => 'Finalizada'][$key] ?? $status;
     }
+=======
+use Illuminate\Http\Request;
+
+class AvaliacaoController extends Controller
+{
+    // CREATE
+    public function store(Request $request)
+    {
+        $avaliacao = Avaliacao::create($request->all());
+
+        return response()->json($avaliacao, 201);
+    }
+
+    // READ ALL
+    public function index()
+    {
+        $avaliacoes = Avaliacao::all();
+
+        return response()->json($avaliacoes, 200);
+    }
+
+    // READ ONE
+    public function show($id)
+    {
+        $avaliacao = Avaliacao::findOrFail($id);
+
+        return response()->json($avaliacao, 200);
+    }
+
+    // UPDATE
+    public function update(Request $request, $id)
+    {
+        $avaliacao = Avaliacao::findOrFail($id);
+
+        $avaliacao->update($request->all());
+
+        return response()->json($avaliacao, 200);
+    }
+
+    // DELETE
+    public function destroy($id)
+    {
+        $avaliacao = Avaliacao::findOrFail($id);
+
+        $avaliacao->delete();
+
+        return response()->json([
+            'mensagem' => 'Avaliação apagada com sucesso.'
+        ], 200);
+    }
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 }

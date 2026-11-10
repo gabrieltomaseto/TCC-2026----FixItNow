@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Storage;
+=======
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 
 class Empresa extends Model
 {
@@ -15,6 +18,7 @@ class Empresa extends Model
         'endereco',
         'telefone',
         'email',
+<<<<<<< HEAD
         'foto_path',
         'descricao',
         'created_by',
@@ -31,6 +35,10 @@ class Empresa extends Model
             : null;
     }
 
+=======
+    ];
+
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
     public function usuario()
     {
         return $this->hasOne(User::class, 'empresa_id');

@@ -14,6 +14,7 @@ class Autonomo extends Model
         'email',
         'especialidade',
         'disponibilidade',
+<<<<<<< HEAD
         'carga_horaria',
         'ativo',
         'foto_path',
@@ -50,4 +51,7 @@ class Autonomo extends Model
             'id_servico'
         )->withPivot(['status', 'nivel_experiencia'])->withTimestamps();
     }
+=======
+    ];
+>>>>>>> d63d01b90c99aec16c7eafaaf043bb2ec5654871
 }
