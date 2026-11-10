@@ -3,11 +3,11 @@ import axios from "axios";
 import AsidePainel from "../Components/AsidePainel";
 import { apiUrl, authHeaders, getSession } from "../lib/auth";
 
-const STATUS_CONCLUIDOS = ["Concluída", "Finalizada"];
+const STATUS_CONCLUIDOS = ["Finalizada"];
 const STATUS_ABERTOS = ["Pendente", "Aberta"];
 
 function statusClass(status) {
-  if (status === "Concluída") return "bg-green-100 text-green-800";
+  if (status === "Finalizada") return "bg-green-100 text-green-800";
   if (status === "Finalizada") return "bg-gray-100 text-gray-800";
   if (status === "Em andamento") return "bg-blue-100 text-blue-800";
   if (status === "Cancelada" || status === "Não aceita") return "bg-red-100 text-red-800";
@@ -161,7 +161,7 @@ function Painel() {
               <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm">
                 <div className="flex justify-between items-start">
                   <h3 className="font-semibold text-gray-700 dark:text-gray-300 text-sm">
-                    CONCLUÍDAS
+                    FINALIZADAS
                   </h3>
 
                   <span className="text-blue-500 text-lg">

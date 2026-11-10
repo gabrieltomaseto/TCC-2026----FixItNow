@@ -5,22 +5,11 @@ import AsidePainel from "../Components/AsidePainel";
 import { apiUrl, authHeaders, getApiErrorMessage, getSession, isEmpresa } from "../lib/auth";
 import { INITIAL_CHAMADO, chamadoPayload } from "../lib/chamado";
 
-const tiposServico = [
-  'Elétrica',
-  'Hidráulica',
-  'Ar-condicionado',
-  'Manutenção predial',
-  'Pintura',
-  'Refrigeração',
-  'Informática / redes',
-  'Outros',
-];
-
 const prioridades = ['Baixa', 'Média', 'Alta', 'Urgente'];
 
 function NovoChamado() {
   const [formData, setFormData] = useState({ ...INITIAL_CHAMADO });
-  const [autonomos, setAutonomos] = useState([]);
+  const [servicos, setServicos] = useState([]);
   const [erro, setErro] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [idCriado, setIdCriado] = useState(null);
@@ -29,10 +18,10 @@ function NovoChamado() {
   useEffect(() => {
     if (tipoConta !== 'empresa') return;
     let ativo = true;
-    axios.get(apiUrl('autonomos')).then(({ data }) => {
+    axios.get(apiUrl('servicos')).then((servicosResponse) => {
       if (!ativo) return;
-      setAutonomos(Array.isArray(data) ? data.filter((item) => item.ativo !== false) : []);
-    }).catch(() => { if (ativo) setErro('Não foi possível carregar os autônomos disponíveis.'); });
+      setServicos(Array.isArray(servicosResponse.data) ? servicosResponse.data.filter((item) => item.ativo !== false) : []);
+    }).catch(() => { if (ativo) setErro('Não foi possível carregar os serviços disponíveis.'); });
     return () => { ativo = false; };
   }, [tipoConta]);
 
@@ -40,7 +29,14 @@ function NovoChamado() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const proximo = { ...prev, [name]: value };
+      if (name === 'id_servico') {
+        const servico = servicos.find((item) => String(item.id) === String(value));
+        if (servico?.categoria || servico?.nome) proximo.tipoServico = servico.categoria || servico.nome;
+      }
+      return proximo;
+    });
     setEnviado(false);
   };
 
@@ -50,7 +46,7 @@ function NovoChamado() {
     setErro('');
     setEnviado(false);
     if (!isEmpresa(session)) { setErro('Somente empresas podem abrir chamados.'); return; }
-    if (!formData.id_autonomo) { setErro('Selecione o autônomo que receberá o pedido.'); return; }
+    if (!formData.id_servico) { setErro('Selecione o serviço que precisa ser realizado.'); return; }
     try {
       const payload = chamadoPayload(formData);
       setEnviando(true);
@@ -122,7 +118,7 @@ function NovoChamado() {
             {erro && <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{erro}</div>}
             {enviado && (
               <div className="mb-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
-                Chamado #{idCriado} enviado com sucesso. Nossa equipe entrará em contato em breve.
+                Chamado #{idCriado} enviado para todos os profissionais disponíveis da área com sucesso.
               </div>
             )}
 
@@ -178,29 +174,17 @@ function NovoChamado() {
                 />
               </label>
 
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                Tipo de serviço
-                <select
-                  name="tipoServico"
-                  value={formData.tipoServico}
-                  onChange={handleChange}
-                  className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3 py-2.5 outline-none transition focus:border-green-500 focus:bg-white dark:focus:bg-slate-700"
-                >
-                  {tiposServico.map((tipo) => (
-                    <option key={tipo} value={tipo}>
-                      {tipo}
-                    </option>
-                  ))}
-                </select>
-              </label>
 
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 md:col-span-2">
-                Autônomo responsável
-                <select name="id_autonomo" value={formData.id_autonomo} onChange={handleChange} required className="mt-2 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-green-500">
-                  <option value="">Selecione um autônomo</option>
-                  {autonomos.map((autonomo) => <option key={autonomo.id} value={autonomo.id}>{autonomo.nome} — {autonomo.especialidade || 'Profissional'}</option>)}
+                Serviço solicitado
+                <select name="id_servico" value={formData.id_servico} onChange={handleChange} required className="mt-2 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-green-500">
+                  <option value="">Selecione um serviço</option>
+                  {servicos.map((servico) => <option key={servico.id} value={servico.id}>{servico.nome}</option>)}
                 </select>
               </label>
+              <div className="md:col-span-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800 dark:border-green-900 dark:bg-green-950/30 dark:text-green-200">
+                O chamado será enviado automaticamente para todos os autônomos ativos da área do serviço selecionado.
+              </div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 us">
                 Prioridade
                 <select

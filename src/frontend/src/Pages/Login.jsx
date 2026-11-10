@@ -40,7 +40,7 @@ function Login() {
       }
 
       setSession(data);
-      navigate("/inicio");
+      navigate("/site");
     } catch (error) {
       setErro(getApiErrorMessage(error, "Não foi possível entrar. Confira seus dados."));
     } finally {

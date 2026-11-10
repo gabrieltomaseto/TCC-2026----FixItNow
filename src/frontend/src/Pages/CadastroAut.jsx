@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { apiUrl, getApiErrorMessage, setSession } from "../lib/auth";
+import { celularValido, cpfValido, formatarCelular, formatarCpf } from "../lib/validacaoCadastro";
 
 const inputClass = "mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-500 outline-none transition focus:border-green-400 focus:ring-2 focus:ring-green-500/20";
 const labelClass = "block text-sm font-medium text-slate-200";
@@ -14,6 +15,7 @@ function CadastroAut() {
     telefone: "",
     especialidade: "",
     disponibilidade: "",
+    carga_horaria: "",
     email: "",
     password: "",
     password_confirmation: "",
@@ -22,17 +24,21 @@ function CadastroAut() {
   const [carregando, setCarregando] = useState(false);
 
   function handleChange(event) {
-    setFormData((atual) => ({ ...atual, [event.target.name]: event.target.value }));
+    const { name, value } = event.target;
+    const formatado = name === "cpf" ? formatarCpf(value) : name === "telefone" ? formatarCelular(value) : value;
+    setFormData((atual) => ({ ...atual, [name]: formatado }));
   }
 
   async function cadastrar(event) {
     event.preventDefault();
     setErro("");
+    if (!cpfValido(formData.cpf)) { setErro("Informe um CPF válido com 11 dígitos."); return; }
+    if (!celularValido(formData.telefone)) { setErro("Informe um celular válido com DDD (10 ou 11 dígitos)."); return; }
     setCarregando(true);
     try {
       const { data } = await axios.post(apiUrl("auth/autonomo/cadastro"), formData);
       setSession({ ...data, tipo: data.usuario?.tipo || "autonomo" });
-      navigate("/inicio", { replace: true });
+      navigate("/site", { replace: true });
     } catch (error) {
       setErro(getApiErrorMessage(error, "Erro ao cadastrar. Verifique os dados."));
     } finally {
@@ -52,13 +58,26 @@ function CadastroAut() {
             <input className={inputClass} id="nome" name="nome" type="text" value={formData.nome} onChange={handleChange} autoComplete="name" placeholder="Seu nome completo" required />
           </label>
           <label className={labelClass} htmlFor="cpf">CPF
-            <input className={inputClass} id="cpf" name="cpf" type="text" value={formData.cpf} onChange={handleChange} placeholder="000.000.000-00" required />
+            <input className={inputClass} id="cpf" name="cpf" type="text" inputMode="numeric" maxLength={14} value={formData.cpf} onChange={handleChange} placeholder="000.000.000-00" required />
           </label>
           <label className={labelClass} htmlFor="telefone">Telefone
-            <input className={inputClass} id="telefone" name="telefone" type="tel" value={formData.telefone} onChange={handleChange} autoComplete="tel" placeholder="(00) 00000-0000" required />
+            <input className={inputClass} id="telefone" name="telefone" type="tel" inputMode="tel" maxLength={15} value={formData.telefone} onChange={handleChange} autoComplete="tel" placeholder="(00) 00000-0000" required />
           </label>
           <label className={labelClass} htmlFor="especialidade">Especialidade
-            <input className={inputClass} id="especialidade" name="especialidade" type="text" value={formData.especialidade} onChange={handleChange} placeholder="Ex.: elétrica, hidráulica" required />
+            <select className={inputClass} id="especialidade" name="especialidade" value={formData.especialidade} onChange={handleChange} required>
+              <option value="" className="bg-slate-950 text-white">Selecione sua especialidade</option>
+              <option value="Elétrica" className="bg-slate-950 text-white">Elétrica</option>
+              <option value="Hidráulica" className="bg-slate-950 text-white">Hidráulica</option>
+              <option value="Ar-condicionado" className="bg-slate-950 text-white">Ar-condicionado</option>
+              <option value="Manutenção predial" className="bg-slate-950 text-white">Manutenção predial</option>
+              <option value="Pintura" className="bg-slate-950 text-white">Pintura</option>
+              <option value="Refrigeração" className="bg-slate-950 text-white">Refrigeração</option>
+              <option value="Informática / redes" className="bg-slate-950 text-white">Informática / redes</option>
+              <option value="Outros" className="bg-slate-950 text-white">Outros</option>
+            </select>
+          </label>
+          <label className={labelClass} htmlFor="carga_horaria">Carga horária <span className="font-normal text-slate-400">(opcional)</span>
+            <input className={inputClass} id="carga_horaria" name="carga_horaria" type="text" value={formData.carga_horaria} onChange={handleChange} placeholder="Ex.: 8 horas por dia" />
           </label>
           <label className={labelClass} htmlFor="disponibilidade">Disponibilidade <span className="font-normal text-slate-400">(opcional)</span>
             <input className={inputClass} id="disponibilidade" name="disponibilidade" type="text" value={formData.disponibilidade} onChange={handleChange} placeholder="Ex.: segunda a sexta" />

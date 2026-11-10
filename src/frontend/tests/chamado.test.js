@@ -16,20 +16,19 @@ test("rejeita preços negativos, malformados ou acima do limite do banco", () =>
   }
 });
 
-test("envia o autônomo escolhido e todos os campos recolhidos no chamado", () => {
+test("envia o ID real e todos os campos recolhidos no chamado", () => {
   const payload = chamadoPayload({
     ...INITIAL_CHAMADO,
     nome: " Ana ", empresa: " Rua A ", local: " Sala 02 ", telefone: " 11999999999 ",
     tipoServico: "Elétrica", prioridade: "Alta", data: "2026-10-21",
-    descricao: " Reparar tomada ", preco: "R$ 150,50", id_autonomo: "12",
+    descricao: " Reparar tomada ", preco: "R$ 150,50", id_servico: "8", id_autonomo: "12",
   });
   assert.deepEqual(payload, {
-    id_autonomo: 12, descricao_problema: "Reparar tomada", data_solicitacao: "2026-10-21", status: "Pendente",
+    id_servico: 8, id_autonomo: 12, descricao_problema: "Reparar tomada", data_solicitacao: "2026-10-21", status: "Pendente",
     nome_contato: "Ana", empresa_contato: "Rua A", local_atendimento: "Sala 02", telefone_contato: "11999999999",
     tipo_servico: "Elétrica", prioridade: "Alta", preco_estimado: 150.5,
   });
   assert.equal("id_empresa" in payload, false, "empresa deve ser definida no backend pelo token");
-  assert.equal("id_servico" in payload, false, "o serviço é resolvido no backend a partir do tipo de serviço");
 });
 
 test("valores opcionais vazios ficam nulos e o estado inicial tem preço controlado", () => {

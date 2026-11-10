@@ -8,6 +8,7 @@ export const INITIAL_CHAMADO = {
   data: "",
   descricao: "",
   preco: "",
+  id_servico: "",
   id_autonomo: "",
 };
 
@@ -29,7 +30,8 @@ export function parsePreco(value) {
 
 export function chamadoPayload(form) {
   return {
-    id_autonomo: Number(form.id_autonomo),
+    id_servico: Number(form.id_servico),
+    ...(form.id_autonomo ? { id_autonomo: Number(form.id_autonomo) } : {}),
     descricao_problema: form.descricao.trim(),
     data_solicitacao: form.data || undefined,
     status: "Pendente",

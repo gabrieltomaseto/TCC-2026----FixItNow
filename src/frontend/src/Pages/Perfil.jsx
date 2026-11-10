@@ -1,26 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Link, Navigate, useLocation } from "react-router-dom";
-import Badge from "../Components/Badge";
-import FotoPerfil from "../Components/FotoPerfil";
-import { authHeaders, getApiErrorMessage, getSession, isAutonomo, isEmpresa, apiUrl, updateProfile, updateProfilePhoto } from "../lib/auth";
-import { useNotificacoes } from "../lib/useNotificacoes";
+import { Link, Navigate } from "react-router-dom";
+import { authHeaders, getApiErrorMessage, getSession, isAutonomo, isEmpresa, apiUrl, updateProfile, updateProfilePhoto, profilePhotoUrl } from "../lib/auth";
 
 const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
 const ACCEPTED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const STATUS_IGNORADOS = ["nao aceita", "cancelada"];
 
-function normalizarStatus(status) {
-  return String(status || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-}
-
-function atendimentoConcluido(item) {
-  return ["concluida", "finalizada"].includes(normalizarStatus(item.status));
-}
-
-function estrelas(media) {
-  const cheias = Math.round(media);
-  return "★".repeat(cheias) + "☆".repeat(5 - cheias);
+function FotoAutonomo({ autonomo }) {
+  const [foto, setFoto] = useState(() => profilePhotoUrl(autonomo?.foto_url));
+  return (
+    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-green-100 text-3xl dark:bg-gray-700">
+      {foto ? (
+        <img src={foto} alt={`Foto de ${autonomo?.nome || "autônomo"}`} className="h-full w-full object-cover" onError={() => setFoto("")} />
+      ) : (
+        <span aria-hidden="true">🧰</span>
+      )}
+    </div>
+  );
 }
 
 function Perfil() {
@@ -28,12 +24,20 @@ function Perfil() {
   const empresa = isEmpresa(session);
   const autonomo = isAutonomo(session);
   const perfil = empresa ? session?.empresa : session?.autonomo;
-  const nome = empresa ? perfil?.nome || session?.usuario?.name || "Empresa" : perfil?.nome || session?.usuario?.name || "Autônomo";
+  const [nomePerfil, setNomePerfil] = useState(perfil?.nome || session?.usuario?.name || "");
+  const [cargaHoraria, setCargaHoraria] = useState(perfil?.carga_horaria || "");
+  const [disponibilidade, setDisponibilidade] = useState(perfil?.disponibilidade || "");
+  const dadosSalvosRef = useRef({ nome: perfil?.nome || session?.usuario?.name || "", cargaHoraria: perfil?.carga_horaria || "", disponibilidade: perfil?.disponibilidade || "" });
+  const nome = nomePerfil || (empresa ? "Empresa" : "Autônomo");
+  const [editandoDados, setEditandoDados] = useState(false);
+  const [salvandoDados, setSalvandoDados] = useState(false);
+  const [mensagemDados, setMensagemDados] = useState("");
+  const [erroDados, setErroDados] = useState("");
   const [nota, setNota] = useState(0);
   const [mensagem, setMensagem] = useState("");
   const [mostrarToken, setMostrarToken] = useState(false);
   const [copiado, setCopiado] = useState(false);
-  const [foto, setFoto] = useState(() => perfil?.foto_url || perfil?.avatar_url || perfil?.foto || "");
+  const [foto, setFoto] = useState(() => profilePhotoUrl(perfil?.foto_url || perfil?.avatar_url || perfil?.foto));
   const [enviandoFoto, setEnviandoFoto] = useState(false);
   const [mensagemFoto, setMensagemFoto] = useState("");
   const [erroFoto, setErroFoto] = useState("");
@@ -43,16 +47,13 @@ function Perfil() {
   const [salvandoDescricao, setSalvandoDescricao] = useState(false);
   const [mensagemDescricao, setMensagemDescricao] = useState("");
   const [erroDescricao, setErroDescricao] = useState("");
-  const [todasSolicitacoes, setTodasSolicitacoes] = useState([]);
+  const [solicitacoes, setSolicitacoes] = useState([]);
   const [idSolicitacao, setIdSolicitacao] = useState("");
   const [comentarios, setComentarios] = useState("");
   const [carregandoSolicitacoes, setCarregandoSolicitacoes] = useState(true);
   const [enviandoAvaliacao, setEnviandoAvaliacao] = useState(false);
   const [erroAvaliacao, setErroAvaliacao] = useState("");
   const sessionToken = session?.token;
-  const location = useLocation();
-  const naoLidas = useNotificacoes();
-  const solicitacoes = todasSolicitacoes.filter(atendimentoConcluido);
 
   useEffect(() => {
     if (!sessionToken) return undefined;
@@ -62,7 +63,11 @@ function Perfil() {
         if (!ativo || !data?.perfil) return;
         updateProfile(data.perfil, data.usuario, sessionToken);
         setDescricao(data.perfil.descricao || "");
-        setFoto(data.perfil.foto_url || "");
+        setNomePerfil(data.perfil.nome || data.usuario?.name || "");
+        setCargaHoraria(data.perfil.carga_horaria || "");
+        setDisponibilidade(data.perfil.disponibilidade || "");
+        dadosSalvosRef.current = { nome: data.perfil.nome || data.usuario?.name || "", cargaHoraria: data.perfil.carga_horaria || "", disponibilidade: data.perfil.disponibilidade || "" };
+        setFoto(profilePhotoUrl(data.perfil.foto_url));
       })
       .catch((error) => { if (ativo) setErroDescricao(getApiErrorMessage(error, "Não foi possível carregar o perfil atualizado.")); })
       .finally(() => { if (ativo) setCarregandoPerfil(false); });
@@ -76,48 +81,30 @@ function Perfil() {
       .then(({ data }) => {
         if (!ativo) return;
         if (!Array.isArray(data)) throw new Error("A API não retornou as solicitações.");
-        setTodasSolicitacoes(data);
+        setSolicitacoes(data.filter((item) => ["finalizada"].includes(
+          String(item.status).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+        )));
       })
       .catch((error) => { if (ativo) setErroAvaliacao(getApiErrorMessage(error, error.message || "Não foi possível carregar as solicitações para avaliação.")); })
       .finally(() => { if (ativo) setCarregandoSolicitacoes(false); });
     return () => { ativo = false; };
   }, [empresa, sessionToken]);
 
-  useEffect(() => {
-    if (location.hash !== "#avaliacoes" || carregandoSolicitacoes) return;
-    document.getElementById("avaliacoes")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [location.hash, carregandoSolicitacoes]);
-
   const solicitacaoSelecionada = solicitacoes.find((item) => String(item.id) === idSolicitacao);
+  const autonomosAvaliacao = [...new Map(
+    solicitacoes
+      .filter((item) => item.autonomo?.id)
+      .map((item) => [item.autonomo.id, item.autonomo])
+  ).values()];
 
-  const autonomosSelecionados = Object.values(todasSolicitacoes.reduce((mapa, item) => {
-    if (!item.autonomo?.id || STATUS_IGNORADOS.includes(normalizarStatus(item.status))) return mapa;
-    const atual = mapa[item.autonomo.id] || { autonomo: item.autonomo, pedidos: 0, concluidas: [], notas: [] };
-    atual.pedidos += 1;
-    if (atendimentoConcluido(item)) atual.concluidas.push(item);
-    if (item.avaliacao?.nota) atual.notas.push(Number(item.avaliacao.nota));
-    mapa[item.autonomo.id] = atual;
-    return mapa;
-  }, {}));
-
-  function escolherSolicitacao(id) {
-    const item = solicitacoes.find((solicitacao) => String(solicitacao.id) === String(id));
-    setIdSolicitacao(String(id));
+  function selecionarSolicitacao(event) {
+    const id = event.target.value;
+    const item = solicitacoes.find((solicitacao) => String(solicitacao.id) === id);
+    setIdSolicitacao(id);
     setNota(item?.avaliacao?.nota || 0);
     setComentarios(item?.avaliacao?.comentarios || "");
     setMensagem("");
     setErroAvaliacao("");
-  }
-
-  function selecionarSolicitacao(event) {
-    escolherSolicitacao(event.target.value);
-  }
-
-  function avaliarAutonomo(grupo) {
-    const alvo = grupo.concluidas.find((item) => !item.avaliacao) || grupo.concluidas[0];
-    if (!alvo) return;
-    escolherSolicitacao(alvo.id);
-    document.getElementById("formulario-avaliacao")?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   if (!session) return <Navigate to="/login" replace />;
@@ -131,7 +118,7 @@ function Perfil() {
     setMensagem("");
     setErroAvaliacao("");
     if (!solicitacaoSelecionada || !nota) {
-      setErroAvaliacao("Selecione uma solicitação concluída e uma nota de 1 a 5 estrelas.");
+      setErroAvaliacao("Selecione uma solicitação finalizada e uma nota de 1 a 5 estrelas.");
       return;
     }
     setEnviandoAvaliacao(true);
@@ -144,7 +131,7 @@ function Perfil() {
       if (!data?.id || Number(data.id_solicitacao) !== Number(solicitacaoSelecionada.id)) {
         throw new Error("A API não confirmou o vínculo da avaliação. Atualize a página antes de reenviar.");
       }
-      setTodasSolicitacoes((atuais) => atuais.map((item) => item.id === solicitacaoSelecionada.id ? { ...item, avaliacao: data } : item));
+      setSolicitacoes((atuais) => atuais.map((item) => item.id === solicitacaoSelecionada.id ? { ...item, avaliacao: data } : item));
       setMensagem(`Avaliação ${avaliacaoExistente ? "atualizada" : "registrada"} para a solicitação #${solicitacaoSelecionada.id}, com ${data.nota} estrela${data.nota > 1 ? "s" : ""}.`);
     } catch (error) {
       setErroAvaliacao(getApiErrorMessage(error, error.message || "Não foi possível salvar a avaliação."));
@@ -153,6 +140,37 @@ function Perfil() {
     }
   }
 
+  async function salvarDadosPerfil() {
+    if (salvandoDados || carregandoPerfil) return;
+    const nomeNormalizado = nomePerfil.trim();
+    if (!nomeNormalizado) {
+      setErroDados("Informe um nome válido.");
+      return;
+    }
+    setErroDados("");
+    setMensagemDados("");
+    setSalvandoDados(true);
+    try {
+      const payload = { nome: nomeNormalizado };
+      if (autonomo) {
+        payload.carga_horaria = cargaHoraria.trim() || null;
+        payload.disponibilidade = disponibilidade.trim() || null;
+      }
+      const { data } = await axios.put(apiUrl("perfil"), payload, { headers: authHeaders(session) });
+      if (!data?.perfil) throw new Error("A API não confirmou os dados do perfil.");
+      updateProfile(data.perfil, data.usuario || null, sessionToken);
+      setNomePerfil(data.perfil.nome || nomeNormalizado);
+      setCargaHoraria(data.perfil.carga_horaria || "");
+      setDisponibilidade(data.perfil.disponibilidade || "");
+      dadosSalvosRef.current = { nome: data.perfil.nome || nomeNormalizado, cargaHoraria: data.perfil.carga_horaria || "", disponibilidade: data.perfil.disponibilidade || "" };
+      setEditandoDados(false);
+      setMensagemDados("Dados do perfil salvos com sucesso.");
+    } catch (error) {
+      setErroDados(getApiErrorMessage(error, error.message || "Não foi possível salvar os dados do perfil."));
+    } finally {
+      setSalvandoDados(false);
+    }
+  }
   async function salvarDescricao() {
     if (salvandoDescricao || carregandoPerfil) return;
     setErroDescricao("");
@@ -205,7 +223,7 @@ function Perfil() {
       const novaFoto = resposta.data?.foto_url || resposta.data?.perfil?.foto_url;
       if (!novaFoto) throw new Error("O servidor não retornou o endereço da foto.");
       updateProfilePhoto(novaFoto, sessionToken);
-      setFoto(novaFoto);
+      setFoto(profilePhotoUrl(novaFoto));
       setMensagemFoto("Foto de perfil atualizada.");
     } catch (error) {
       setErroFoto(getApiErrorMessage(error, error.message || "Não foi possível enviar a foto. Tente novamente."));
@@ -223,13 +241,17 @@ function Perfil() {
             <h1 className="mt-1 text-4xl font-bold">Olá, {nome}</h1>
             <p className="mt-2 text-gray-500 dark:text-gray-400">Gerencie as informações, o token e as ações do seu perfil.</p>
           </div>
-          {autonomo && <Link to="/pedidos" className="inline-flex items-center gap-2 rounded-lg bg-green-500 px-5 py-3 font-bold text-slate-950 hover:bg-green-400">Ver meus pedidos <Badge total={naoLidas} rotulo="novos pedidos" /></Link>}
+          {autonomo && <Link to="/pedidos" className="rounded-lg bg-green-500 px-5 py-3 font-bold text-slate-950 hover:bg-green-400">Ver meus pedidos</Link>}
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[240px_1fr]">
           <section className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <div className="mx-auto flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-green-100 text-5xl dark:bg-gray-700">
-              <FotoPerfil src={foto} alt={`Foto de perfil de ${nome}`} fallback={<span aria-hidden="true">{empresa ? "🏢" : "🧰"}</span>} />
+              {foto ? (
+                <img src={foto} alt={`Foto de perfil de ${nome}`} className="h-full w-full object-cover" onError={() => setFoto("")} />
+              ) : (
+                <span aria-hidden="true">{empresa ? "🏢" : "🧰"}</span>
+              )}
             </div>
             <h2 className="mt-5 text-xl font-bold">{nome}</h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{empresa ? "Conta empresa" : "Conta autônomo"}</p>
@@ -255,20 +277,36 @@ function Perfil() {
           </section>
 
           <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <h2 className="text-xl font-bold">Descrição</h2>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-xl font-bold">Dados do perfil</h2>
+              <button type="button" onClick={() => { if (editandoDados) { setNomePerfil(dadosSalvosRef.current.nome); setCargaHoraria(dadosSalvosRef.current.cargaHoraria); setDisponibilidade(dadosSalvosRef.current.disponibilidade); } setEditandoDados((atual) => !atual); setErroDados(""); setMensagemDados(""); }} className="rounded-lg border border-green-500 px-4 py-2 text-sm font-semibold text-green-600 hover:bg-green-50 dark:hover:bg-gray-700">{editandoDados ? "Cancelar" : "Editar dados"}</button>
+            </div>
+            {editandoDados ? (
+              <div className="mt-4 space-y-4">
+                <label className="block text-sm font-semibold">Nome
+                  <input value={nomePerfil} onChange={(event) => setNomePerfil(event.target.value)} maxLength={100} className="mt-2 w-full rounded-lg border border-green-500 bg-transparent p-3 outline-none" />
+                </label>
+                {autonomo && <>
+                  <label className="block text-sm font-semibold">Carga horária
+                    <input value={cargaHoraria} onChange={(event) => setCargaHoraria(event.target.value)} maxLength={100} placeholder="Ex.: 8 horas por dia" className="mt-2 w-full rounded-lg border border-green-500 bg-transparent p-3 outline-none" />
+                  </label>
+                  <label className="block text-sm font-semibold">Disponibilidade de horários
+                    <input value={disponibilidade} onChange={(event) => setDisponibilidade(event.target.value)} maxLength={100} placeholder="Ex.: segunda a sexta, das 8h às 18h" className="mt-2 w-full rounded-lg border border-green-500 bg-transparent p-3 outline-none" />
+                  </label>
+                </>}
+                <button type="button" onClick={salvarDadosPerfil} disabled={salvandoDados} className="rounded-lg bg-green-500 px-4 py-2 font-semibold text-slate-950 hover:bg-green-400 disabled:opacity-60">{salvandoDados ? "Salvando..." : "Salvar dados"}</button>
+              </div>
+            ) : (
+              <div className="mt-4 grid gap-3 text-sm text-gray-600 dark:text-gray-300"><p><span className="font-semibold">Nome:</span> {nomePerfil || "—"}</p>{autonomo && <><p><span className="font-semibold">Carga horária:</span> {cargaHoraria || "Não informada"}</p><p><span className="font-semibold">Disponibilidade:</span> {disponibilidade || "Não informada"}</p></>}</div>
+            )}
+            {erroDados && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-300">{erroDados}</p>}
+            {mensagemDados && <p role="status" className="mt-3 text-sm font-semibold text-green-600">{mensagemDados}</p>}
+            <h2 className="mt-7 text-xl font-bold">Descrição</h2>
             <textarea aria-label="Descrição do perfil" value={descricao} onChange={(event) => { setDescricao(event.target.value); setMensagemDescricao(""); }} maxLength={5000} disabled={carregandoPerfil || salvandoDescricao} className="mt-4 w-full rounded-lg border border-green-500 bg-transparent p-4 outline-none" rows={4} placeholder={autonomo ? "Fale sobre sua experiência e especialidades" : "Adicione uma descrição para sua empresa"} />
             <button type="button" onClick={salvarDescricao} disabled={carregandoPerfil || salvandoDescricao} className="mt-3 rounded-lg bg-green-500 px-4 py-2 font-semibold text-white hover:bg-green-600">{carregandoPerfil ? "Carregando..." : salvandoDescricao ? "Salvando..." : "Salvar descrição"}</button>
             {erroDescricao && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-300">{erroDescricao}</p>}
             {mensagemDescricao && <p role="status" className="mt-3 text-sm font-semibold text-green-600">{mensagemDescricao}</p>}
-          
-            <div className=" flex justify-center flex-col  mt-6 rounded-lg border border-green-500 bg-green-50 p-4 text-sm text-green-700 dark:border-green-900 dark:bg-green-950/30">
-              <textarea name="disponibilidade" id="disponibilidade" placeholder="Insira sua disponibilidade..." className=" rounded-2xl px-3 py-1 " ></textarea> <button className="rounded-lg bg-green-500 px-4 py-2 font-semibold text-white hover:bg-green-600">Alterar Disponibilidade</button>
-            </div>
-           
           </section>
-           
-
-          
         </div>
 
         <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-900 p-6 text-white shadow-sm dark:border-slate-700">
@@ -295,50 +333,35 @@ function Perfil() {
         </section>
 
         {empresa && (
-          <section id="avaliacoes" className="mt-8 scroll-mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <h2 className="text-2xl font-bold">Autônomos selecionados</h2>
-            <p className="mt-2 text-gray-500 dark:text-gray-400">Profissionais que sua empresa escolheu para os serviços. A avaliação fica disponível somente para contas empresariais e atendimentos concluídos.</p>
-            {carregandoSolicitacoes && <p className="mt-4 text-sm text-gray-500">Carregando autônomos...</p>}
-            {!carregandoSolicitacoes && !autonomosSelecionados.length && <p className="mt-4 rounded-xl border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500 dark:border-gray-600">Nenhum autônomo foi selecionado ainda. Abra um chamado para escolher um profissional.</p>}
-            {autonomosSelecionados.length > 0 && (
-              <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {autonomosSelecionados.map((grupo) => {
-                  const media = grupo.notas.length ? grupo.notas.reduce((soma, valor) => soma + valor, 0) / grupo.notas.length : 0;
-                  const faltaAvaliar = grupo.concluidas.some((item) => !item.avaliacao);
-                  return (
-                    <li key={grupo.autonomo.id} className="rounded-xl border border-gray-200 p-4 text-center dark:border-gray-700">
-                      <div className="mx-auto flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-green-100 text-4xl dark:bg-gray-700">
-                        <FotoPerfil src={grupo.autonomo.foto_url} alt={`Foto de ${grupo.autonomo.nome}`} fallback={<span aria-hidden="true">🧰</span>} />
+          <section className="mt-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <h2 className="text-2xl font-bold">Avaliar atendimento</h2>
+            <p className="mt-2 text-gray-500 dark:text-gray-400">A avaliação fica disponível somente para contas empresariais e solicitações finalizadas.</p>
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold">Autônomos do atendimento</h3>
+              {autonomosAvaliacao.length ? (
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {autonomosAvaliacao.map((autonomoItem) => (
+                    <div key={autonomoItem.id} className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900">
+                      <FotoAutonomo autonomo={autonomoItem} />
+                      <div className="min-w-0">
+                        <p className="truncate font-semibold">{autonomoItem.nome || "Autônomo"}</p>
+                        <p className="truncate text-sm text-gray-500 dark:text-gray-400">{autonomoItem.especialidade || "Profissional"}</p>
                       </div>
-                      <h3 className="mt-3 font-bold">{grupo.autonomo.nome}</h3>
-                      <p className="text-sm font-semibold text-green-600">{grupo.autonomo.especialidade || "Profissional"}</p>
-                      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{grupo.pedidos} {grupo.pedidos === 1 ? "pedido" : "pedidos"} · {grupo.concluidas.length} {grupo.concluidas.length === 1 ? "concluído" : "concluídos"}</p>
-                      {grupo.notas.length ? (
-                        <p className="mt-2 text-lg text-yellow-400" aria-label={`Média ${media.toFixed(1)} de 5`}>{estrelas(media)} <span className="text-xs text-gray-500 dark:text-gray-400">{media.toFixed(1).replace(".", ",")} ({grupo.notas.length})</span></p>
-                      ) : (
-                        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">Ainda sem avaliações</p>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => avaliarAutonomo(grupo)}
-                        disabled={!grupo.concluidas.length}
-                        className="mt-3 w-full rounded-lg bg-green-500 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        {!grupo.concluidas.length ? "Aguardando conclusão" : faltaAvaliar ? "Avaliar atendimento" : "Editar avaliação"}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-            <form id="formulario-avaliacao" onSubmit={avaliar} className="mt-8">
-              <label className="block text-sm font-semibold" htmlFor="solicitacao-avaliacao">Solicitação concluída</label>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">O profissional aparecerá aqui quando houver uma solicitação finalizada.</p>
+              )}
+            </div>
+            <form onSubmit={avaliar} className="mt-6">
+              <label className="block text-sm font-semibold" htmlFor="solicitacao-avaliacao">Solicitação finalizada</label>
               <select id="solicitacao-avaliacao" value={idSolicitacao} onChange={selecionarSolicitacao} disabled={carregandoSolicitacoes || enviandoAvaliacao} required className="mt-2 mb-4 w-full rounded-lg border border-green-500 bg-transparent p-3 outline-none">
                 <option value="" className="bg-white text-gray-900">Selecione uma solicitação</option>
                 {solicitacoes.map((item) => <option key={item.id} value={item.id} className="bg-white text-gray-900">#{item.id} — {item.servico?.nome || "Serviço"} — {item.autonomo?.nome || "Profissional"}{item.avaliacao ? " (já avaliada)" : ""}</option>)}
               </select>
               {carregandoSolicitacoes && <p className="mb-4 text-sm text-gray-500">Carregando solicitações...</p>}
-              {!carregandoSolicitacoes && !solicitacoes.length && !erroAvaliacao && <p className="mb-4 text-sm text-gray-500">Nenhuma solicitação concluída disponível para avaliação.</p>}
+              {!carregandoSolicitacoes && !solicitacoes.length && !erroAvaliacao && <p className="mb-4 text-sm text-gray-500">Nenhuma solicitação finalizada disponível para avaliação.</p>}
               <p className="mb-3 text-sm font-semibold">Selecione as estrelas:</p>
               <div className="flex gap-2">{[1, 2, 3, 4, 5].map((estrela) => <button key={estrela} type="button" disabled={!idSolicitacao || enviandoAvaliacao} aria-label={`${estrela} estrelas`} aria-pressed={estrela === nota} onClick={() => { setNota(estrela); setMensagem(""); }} className={`text-4xl ${estrela <= nota ? "text-yellow-400" : "text-gray-400"}`}>★</button>)}</div>
               <label htmlFor="comentarios-avaliacao" className="mt-4 block text-sm font-semibold">Comentários (opcional)</label>
@@ -353,8 +376,8 @@ function Perfil() {
         {autonomo && (
           <section className="mt-8 rounded-2xl border border-green-200 bg-green-50 p-6 dark:border-green-900 dark:bg-green-950/30">
             <h2 className="text-xl font-bold">Pedidos feitos para você</h2>
-            <p className="mt-2 text-gray-600 dark:text-gray-300">Aceite ou recuse as solicitações recebidas, responda à empresa e atualize o andamento dos seus atendimentos. As avaliações são feitas somente pelas empresas.</p>
-            <Link to="/pedidos" className="mt-4 inline-flex items-center gap-2 rounded-lg border border-green-500 px-4 py-2 font-semibold text-green-700 hover:bg-green-100 dark:text-green-300">Abrir página de pedidos <Badge total={naoLidas} rotulo="novos pedidos" /></Link>
+            <p className="mt-2 text-gray-600 dark:text-gray-300">Consulte as solicitações recebidas e atualize o andamento dos seus atendimentos.</p>
+            <Link to="/pedidos" className="mt-4 inline-flex rounded-lg border border-green-500 px-4 py-2 font-semibold text-green-700 hover:bg-green-100 dark:text-green-300">Abrir página de pedidos</Link>
           </section>
         )}
       </div>

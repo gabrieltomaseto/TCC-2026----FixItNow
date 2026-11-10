@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { apiUrl, getApiErrorMessage, setSession } from "../lib/auth";
+import { celularValido, cnpjValido, formatarCelular, formatarCnpj } from "../lib/validacaoCadastro";
 
 const inputClass = "mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-500 outline-none transition focus:border-green-400 focus:ring-2 focus:ring-green-500/20";
 const labelClass = "block text-sm font-medium text-slate-200";
@@ -21,17 +22,21 @@ function CadastroEmp() {
   const [carregando, setCarregando] = useState(false);
 
   function handleChange(event) {
-    setFormData((atual) => ({ ...atual, [event.target.name]: event.target.value }));
+    const { name, value } = event.target;
+    const formatado = name === "cnpj" ? formatarCnpj(value) : name === "telefone" ? formatarCelular(value) : value;
+    setFormData((atual) => ({ ...atual, [name]: formatado }));
   }
 
   async function cadastrarEmpresa(event) {
     event.preventDefault();
     setErro("");
+    if (!cnpjValido(formData.cnpj)) { setErro("Informe um CNPJ válido com 14 dígitos."); return; }
+    if (!celularValido(formData.telefone)) { setErro("Informe um celular válido com DDD (10 ou 11 dígitos)."); return; }
     setCarregando(true);
     try {
       const { data } = await axios.post(apiUrl("auth/empresa/cadastro"), formData);
       setSession({ ...data, tipo: data.usuario?.tipo || "empresa" });
-      navigate("/inicio", { replace: true });
+      navigate("/site", { replace: true });
     } catch (error) {
       setErro(getApiErrorMessage(error, "Erro ao cadastrar empresa. Verifique os dados."));
     } finally {
@@ -54,10 +59,10 @@ function CadastroEmp() {
             <input className={inputClass} id="endereco" name="endereco" type="text" value={formData.endereco} onChange={handleChange} autoComplete="street-address" placeholder="Endereço da empresa" required />
           </label>
           <label className={labelClass} htmlFor="cnpj">CNPJ
-            <input className={inputClass} id="cnpj" name="cnpj" type="text" value={formData.cnpj} onChange={handleChange} placeholder="00.000.000/0000-00" required />
+            <input className={inputClass} id="cnpj" name="cnpj" type="text" inputMode="numeric" maxLength={18} value={formData.cnpj} onChange={handleChange} placeholder="00.000.000/0000-00" required />
           </label>
           <label className={labelClass} htmlFor="telefone">Telefone
-            <input className={inputClass} id="telefone" name="telefone" type="tel" value={formData.telefone} onChange={handleChange} autoComplete="tel" placeholder="(00) 00000-0000" required />
+            <input className={inputClass} id="telefone" name="telefone" type="tel" inputMode="tel" maxLength={15} value={formData.telefone} onChange={handleChange} autoComplete="tel" placeholder="(00) 00000-0000" required />
           </label>
           <label className={labelClass} htmlFor="email">E-mail
             <input className={inputClass} id="email" name="email" type="email" value={formData.email} onChange={handleChange} autoComplete="email" placeholder="empresa@exemplo.com" required />

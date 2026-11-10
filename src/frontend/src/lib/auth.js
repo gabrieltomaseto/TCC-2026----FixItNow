@@ -77,7 +77,7 @@ export function apiUrl(path) {
   return `${base.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 }
 
-export function storagePhotoUrl(value) {
+export function profilePhotoUrl(value) {
   if (!value) return "";
   if (typeof window === "undefined") return value;
 
@@ -96,14 +96,4 @@ export function storagePhotoUrl(value) {
   } catch {
     return value;
   }
-}
-
-export function profilePhotoUrl(value) {
-  if (!value) return "";
-  const match = String(value).match(/\/storage\/profile-photos\/(\d+)\/([A-Za-z0-9._-]+)$/);
-  return match ? apiUrl(`fotos/${match[1]}/${match[2]}`) : storagePhotoUrl(value);
-}
-
-export function profilePhotoSources(value) {
-  return [...new Set([profilePhotoUrl(value), storagePhotoUrl(value)].filter(Boolean))];
 }

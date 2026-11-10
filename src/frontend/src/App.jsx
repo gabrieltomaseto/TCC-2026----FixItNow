@@ -1,10 +1,10 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useConfig } from "./Context/useConfig";
 import { getSession } from "./lib/auth";
+import ConteudoMain from "./Components/ConteudoMain";
 import Rodape from "./Components/Rodape";
 import BarraNav from "./Components/BarraNav";
 import Painel from "./Pages/Painel";
-import InicioV1 from "./Pages/InicioV1";
 import NovoChamado from "./Pages/NovoChamado";
 import Historico from "./Pages/Historico";
 import Config from "./Pages/Config";
@@ -41,16 +41,15 @@ function App() {
       </header>
       <main id="inicio" className="grow">
         <Routes>
-          <Route path="/site" element={<InicioV1 />} />
+          <Route path="/site" element={<ConteudoMain />} />
           <Route path="/painel" element={<Painel />} />
-          <Route path="/inicio" element={<InicioV1 />} />
           <Route path="/novo-chamado" element={<NovoChamado />} />
           <Route path="/historico" element={<Historico />} />
           <Route path="/pedidos" element={<Pedidos />} />
           <Route path="/swipe-funcionarios" element={<SwipeFuncionarios />} />
           <Route path="/configuracoes" element={<Config />} />
           <Route path="/perfil" element={<Perfil />} />
-          <Route path="*" element={<Navigate to="/inicio" replace />} />
+          <Route path="*" element={<Navigate to="/site" replace />} />
         </Routes>
       </main>
       <footer className={`${modo === "escuro" ? "bg-gray-800 border-gray-700" : "bg-gray-800"} mt-auto border-t px-4 py-6 text-center text-white`}>

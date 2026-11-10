@@ -3,7 +3,7 @@ import axios from "axios";
 import AsidePainel from "../Components/AsidePainel";
 import { apiUrl, authHeaders, getSession } from "../lib/auth";
 
-const STATUS_OPTIONS = ["Pendente", "Aberta", "Em andamento", "Concluída", "Finalizada", "Não aceita", "Cancelada"];
+const STATUS_OPTIONS = ["Pendente", "Aberta", "Em andamento", "Finalizada", "Não aceita", "Cancelada"];
 
 function canonicalStatus(value) {
   return STATUS_OPTIONS.includes(value) ? value : value || "Pendente";
@@ -48,7 +48,7 @@ function formatCurrency(value) {
 }
 
 function statusClass(status) {
-  if (status === "Concluída") return "bg-green-100 text-green-800";
+  if (status === "Finalizada") return "bg-green-100 text-green-800";
   if (status === "Finalizada") return "bg-gray-100 text-gray-800";
   if (status === "Em andamento") return "bg-blue-100 text-blue-800";
   if (status === "Cancelada" || status === "Não aceita") return "bg-red-100 text-red-800";
@@ -213,23 +213,22 @@ function Historico() {
                       <th className="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200 text-xs sm:text-sm hidden sm:table-cell">Data</th>
                       <th className="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200 text-xs sm:text-sm">Status</th>
                       <th className="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200 text-xs sm:text-sm hidden md:table-cell">Custo</th>
-                      <th className="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200 text-xs sm:text-sm hidden lg:table-cell">Resposta do autônomo</th>
                     </tr>
                   </thead>
                   <tbody>
                     {carregando && (
                       <tr>
-                        <td colSpan="5" className="px-4 py-6 text-center text-gray-500">Carregando histórico...</td>
+                        <td colSpan="4" className="px-4 py-6 text-center text-gray-500">Carregando histórico...</td>
                       </tr>
                     )}
                     {!carregando && erro && !historicoSolicitacoes.length && (
                       <tr>
-                        <td colSpan="5" className="px-4 py-6 text-center text-amber-700">Não foi possível carregar o histórico.</td>
+                        <td colSpan="4" className="px-4 py-6 text-center text-amber-700">Não foi possível carregar o histórico.</td>
                       </tr>
                     )}
                     {!carregando && !erro && !solicitacoesFiltradas.length && (
                       <tr>
-                        <td colSpan="5" className="px-4 py-6 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
+                        <td colSpan="4" className="px-4 py-6 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
                       </tr>
                     )}
                     {!carregando && solicitacoesFiltradas.map((item) => {
@@ -237,7 +236,7 @@ function Historico() {
                       const preco = item.preco_estimado ?? item.servico?.preco;
                       return (
                         <tr key={item.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                          <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">{item.servico?.nome || item.tipo_servico || "—"}{item.autonomo?.nome && <span className="block text-xs font-normal text-gray-500 dark:text-gray-400">{item.autonomo.nome}</span>}</td>
+                          <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">{item.servico?.nome || item.tipo_servico || "—"}</td>
                           <td className="px-4 py-3 text-gray-600 dark:text-gray-300 hidden sm:table-cell">{formatDateBR(item.data_solicitacao)}</td>
                           <td className="px-4 py-3">
                             <span className={`px-2 py-1 rounded text-xs font-semibold ${statusClass(status)}`}>
@@ -245,7 +244,6 @@ function Historico() {
                             </span>
                           </td>
                           <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 hidden md:table-cell">{formatCurrency(preco)}</td>
-                          <td className="px-4 py-3 text-gray-600 dark:text-gray-300 hidden lg:table-cell">{item.resposta_autonomo || (status === "Não aceita" ? "Recusado sem mensagem" : "—")}</td>
                         </tr>
                       );
                     })}

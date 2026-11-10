@@ -22,7 +22,7 @@ function ConteudoMain() {
              <p className="text-lg">Somos referência em agilidade de trabalho e de custo e beneficio.</p>      
 
              
-      <CardConteudo name='Autonômos recomendados' img='https://tse2.mm.bing.net/th/id/OIP.tPA7TR3nLF2O77Fck3g-egAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3'/>                            
+      <CardConteudo name='Trabalho profissional é aqui' img='https://blog.sismetro.com/upload/84439092864cbab087f46b2.85353192.jpg'/>                            
         </div>
 
       <div className="flex flex-col p-4 items-start">
@@ -44,7 +44,7 @@ function ConteudoMain() {
 
        <CardConteudo 
       custom='flex flex-row-reverse py-7 '
-       name='- Profissionais qualificados' img={tabela}
+       name='- Serviço de qualidade' img={tabela}
        />
 
    
