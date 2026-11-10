@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Empresa extends Model
 {
@@ -14,7 +15,21 @@ class Empresa extends Model
         'endereco',
         'telefone',
         'email',
+        'foto_path',
+        'descricao',
+        'created_by',
     ];
+
+    protected $hidden = ['foto_path'];
+
+    protected $appends = ['foto_url'];
+
+    public function getFotoUrlAttribute(): ?string
+    {
+        return $this->foto_path
+            ? rtrim(config('app.url'), '/') . '/storage/' . ltrim($this->foto_path, '/')
+            : null;
+    }
 
     public function usuario()
     {
