@@ -24,8 +24,6 @@ class Solicitacao extends Model
         'tipo_servico',
         'prioridade',
         'preco_estimado',
-        'resposta_autonomo',
-        'respondida_em',
     ];
 
     protected $casts = [
@@ -33,7 +31,6 @@ class Solicitacao extends Model
         'data_inicio' => 'date',
         'data_fim' => 'date',
         'preco_estimado' => 'decimal:2',
-        'respondida_em' => 'datetime',
     ];
 
     public function empresa()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Rules\ValidadoresBrasil;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -16,9 +17,9 @@ class EmpresaController extends Controller
         if ($request->user()->tipo !== 'empresa') abort(403, 'Apenas contas empresariais podem cadastrar empresas.');
         $dados = $request->validate([
             'nome' => ['required', 'string', 'max:100'],
-            'cnpj' => ['required', 'string', 'max:18', Rule::unique('empresas', 'cnpj')],
+            'cnpj' => ['required', 'string', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::cnpj((string) $value)) $fail('Informe um CNPJ válido.'); }, Rule::unique('empresas', 'cnpj')],
             'endereco' => ['required', 'string', 'max:150'],
-            'telefone' => ['required', 'string', 'max:20'],
+            'telefone' => ['required', 'string', 'max:20', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::celular((string) $value)) $fail('Informe um telefone com DDD e 10 ou 11 dígitos.'); }],
             'email' => ['required', 'email', 'max:100', Rule::unique('empresas', 'email'), Rule::unique('users', 'email')],
             'descricao' => ['sometimes', 'nullable', 'string', 'max:5000'],
         ]);
@@ -37,9 +38,9 @@ class EmpresaController extends Controller
         $usuario = User::where('empresa_id', $empresa->id)->first();
         $dados = $request->validate([
             'nome' => ['sometimes', 'required', 'string', 'max:100'],
-            'cnpj' => ['sometimes', 'required', 'string', 'max:18', Rule::unique('empresas', 'cnpj')->ignore($empresa->id)],
+            'cnpj' => ['sometimes', 'required', 'string', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::cnpj((string) $value)) $fail('Informe um CNPJ válido.'); }, Rule::unique('empresas', 'cnpj')->ignore($empresa->id)],
             'endereco' => ['sometimes', 'required', 'string', 'max:150'],
-            'telefone' => ['sometimes', 'required', 'string', 'max:20'],
+            'telefone' => ['sometimes', 'required', 'string', 'max:20', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::celular((string) $value)) $fail('Informe um telefone com DDD e 10 ou 11 dígitos.'); }],
             'email' => [
                 'sometimes', 'required', 'email', 'max:100',
                 Rule::unique('empresas', 'email')->ignore($empresa->id),

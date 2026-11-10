@@ -85,4 +85,26 @@ class AuthFlowTest extends TestCase
             ->assertUnauthorized()
             ->assertJsonPath('mensagem', 'E-mail ou senha inválidos.');
     }
+
+    public function test_documents_require_only_their_structural_digit_count(): void
+    {
+        $this->postJson('/api/auth/autonomo/cadastro', [
+            'nome' => 'Profissional Teste', 'cpf' => '1234567890', 'telefone' => '11999990000',
+            'especialidade' => 'Elétrica', 'email' => 'cpf-invalido@example.test',
+            'password' => 'password', 'password_confirmation' => 'password',
+        ])->assertUnprocessable();
+
+        $this->postJson('/api/auth/empresa/cadastro', [
+            'nome' => 'Empresa Teste', 'cnpj' => '1234567890123', 'endereco' => 'Rua A',
+            'telefone' => '11999990000', 'email' => 'cnpj-invalido@example.test',
+            'password' => 'password', 'password_confirmation' => 'password',
+        ])->assertUnprocessable();
+
+        // O formato correto passa mesmo sem validar os dígitos verificadores.
+        $this->postJson('/api/auth/autonomo/cadastro', [
+            'nome' => 'Profissional Estrutural', 'cpf' => '00000000000', 'telefone' => '11999990000',
+            'especialidade' => 'Elétrica', 'email' => 'cpf-valido@example.test',
+            'password' => 'password', 'password_confirmation' => 'password',
+        ])->assertCreated();
+    }
 }

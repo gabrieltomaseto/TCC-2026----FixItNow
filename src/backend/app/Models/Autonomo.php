@@ -14,6 +14,7 @@ class Autonomo extends Model
         'email',
         'especialidade',
         'disponibilidade',
+        'carga_horaria',
         'ativo',
         'foto_path',
         'descricao',
@@ -31,7 +32,7 @@ class Autonomo extends Model
     public function getFotoUrlAttribute(): ?string
     {
         return $this->foto_path
-            ? '/storage/' . ltrim($this->foto_path, '/')
+            ? rtrim(config('app.url'), '/') . '/storage/' . ltrim($this->foto_path, '/')
             : null;
     }
 

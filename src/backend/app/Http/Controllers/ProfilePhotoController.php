@@ -7,17 +7,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfilePhotoController extends Controller
 {
-    public function show(string $usuario, string $arquivo)
-    {
-        abort_if(str_starts_with($arquivo, '.'), 404);
-
-        $caminho = "profile-photos/{$usuario}/{$arquivo}";
-        $disco = Storage::disk('public');
-        abort_unless($disco->exists($caminho), 404);
-
-        return response()->file($disco->path($caminho), ['Cache-Control' => 'public, max-age=86400']);
-    }
-
     public function update(Request $request)
     {
         $validated = $request->validate([

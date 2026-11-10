@@ -27,7 +27,7 @@ class Empresa extends Model
     public function getFotoUrlAttribute(): ?string
     {
         return $this->foto_path
-            ? '/storage/' . ltrim($this->foto_path, '/')
+            ? rtrim(config('app.url'), '/') . '/storage/' . ltrim($this->foto_path, '/')
             : null;
     }
 

@@ -6,6 +6,7 @@ use App\Models\Autonomo;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Rules\ValidadoresBrasil;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -16,9 +17,10 @@ class AuthController extends Controller
     {
         $dados = $request->validate([
             'nome' => ['required', 'string', 'max:100'],
-            'cnpj' => ['required', 'string', 'max:18', Rule::unique('empresas', 'cnpj')],
+            // Confere somente o formato/tamanho; não calcula os dígitos verificadores.
+            'cnpj' => ['required', 'string', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::cnpj((string) $value)) $fail('Informe um CNPJ válido.'); }, Rule::unique('empresas', 'cnpj')],
             'endereco' => ['required', 'string', 'max:150'],
-            'telefone' => ['required', 'string', 'max:20'],
+            'telefone' => ['required', 'string', 'max:20', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::celular((string) $value)) $fail('Informe um telefone com DDD e 10 ou 11 dígitos.'); }],
             'email' => ['required', 'email', 'max:100', Rule::unique('users', 'email'), Rule::unique('empresas', 'email')],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
@@ -44,11 +46,13 @@ class AuthController extends Controller
     {
         $dados = $request->validate([
             'nome' => ['required', 'string', 'max:100'],
-            'cpf' => ['required', 'string', 'max:14', Rule::unique('autonomos', 'cpf')],
-            'telefone' => ['required', 'string', 'max:20'],
+            // Confere somente o formato/tamanho; não calcula os dígitos verificadores.
+            'cpf' => ['required', 'string', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::cpf((string) $value)) $fail('Informe um CPF válido.'); }, Rule::unique('autonomos', 'cpf')],
+            'telefone' => ['required', 'string', 'max:20', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::celular((string) $value)) $fail('Informe um telefone com DDD e 10 ou 11 dígitos.'); }],
             'email' => ['required', 'email', 'max:100', Rule::unique('users', 'email'), Rule::unique('autonomos', 'email')],
             'especialidade' => ['required', 'string', 'max:100'],
             'disponibilidade' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'carga_horaria' => ['sometimes', 'nullable', 'string', 'max:100'],
             'ativo' => ['sometimes', 'boolean'],
             'descricao' => ['sometimes', 'nullable', 'string', 'max:5000'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
@@ -57,7 +61,7 @@ class AuthController extends Controller
             $autonomo = Autonomo::create([
                 'nome' => $dados['nome'], 'cpf' => $dados['cpf'], 'telefone' => $dados['telefone'], 'email' => $dados['email'],
                 'especialidade' => $dados['especialidade'], 'disponibilidade' => $dados['disponibilidade'] ?? null,
-                'ativo' => $dados['ativo'] ?? true, 'descricao' => $dados['descricao'] ?? null,
+                'carga_horaria' => $dados['carga_horaria'] ?? null, 'ativo' => $dados['ativo'] ?? true, 'descricao' => $dados['descricao'] ?? null,
             ]);
             $usuario = User::create([
                 'name' => $autonomo->nome, 'email' => $dados['email'], 'password' => Hash::make($dados['password']),

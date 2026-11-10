@@ -23,8 +23,8 @@ class AvaliacaoController extends Controller
         ])->validate();
         $solicitacao = Solicitacao::where('id_empresa', $user->empresa_id)->whereKey($dados['id_solicitacao'])->first();
         if (!$solicitacao) return response()->json(['mensagem' => 'Solicitação não encontrada para esta empresa.'], 404);
-        if (!in_array($this->canonicalStatus($solicitacao->status), ['Concluída', 'Finalizada'], true)) {
-            return response()->json(['mensagem' => 'A solicitação precisa estar Concluída ou Finalizada para ser avaliada.'], 422);
+        if (!in_array($this->canonicalStatus($solicitacao->status), ['Finalizada'], true)) {
+            return response()->json(['mensagem' => 'A solicitação precisa estar Finalizada para ser avaliada.'], 422);
         }
         if (Avaliacao::where('id_solicitacao', $solicitacao->id)->exists()) {
             return response()->json(['mensagem' => 'Esta solicitação já possui uma avaliação.'], 409);
@@ -105,6 +105,6 @@ class AvaliacaoController extends Controller
         $key = str_replace(['_', '-'], ' ', $key);
         $ascii = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $key);
         $key = trim(preg_replace('/\s+/', ' ', $ascii !== false ? $ascii : $key));
-        return ['concluida' => 'Concluída', 'finalizada' => 'Finalizada'][$key] ?? $status;
+        return ['concluida' => 'Finalizada', 'concluido' => 'Finalizada', 'finalizada' => 'Finalizada', 'finalizado' => 'Finalizada'][$key] ?? $status;
     }
 }

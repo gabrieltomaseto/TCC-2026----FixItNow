@@ -10,5 +10,3 @@ php artisan storage:link
 ```
 
 Configure `APP_URL` como a origem pública da API no backend e `VITE_API_URL` como a URL-base da API (incluindo `/api`, se aplicável) ao compilar o frontend. O campo `foto_url` retornado no login/cadastro e no upload é usado no perfil e na navegação.
-
-As fotos também são entregues pela rota pública `GET /api/fotos/{usuario}/{arquivo}`, que lê o disco `public` diretamente. O front-end usa essa rota primeiro e só recorre a `/storage/...` se ela falhar, então a foto aparece mesmo sem o `php artisan storage:link`.

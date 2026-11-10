@@ -41,7 +41,7 @@ class ProtectedResourcesTest extends TestCase
         $empresa = $this->makeEmpresa();
         $owner = $this->makeEmpresaUser($empresa);
         $otherEmpresa = $this->makeEmpresa();
-        $autonomo = $this->makeAutonomo();
+        $autonomo = $this->makeAutonomo(['especialidade' => 'Manutenção']);
         $servico = $this->makeServico();
         $payload = [
             'id_servico' => $servico->id,
@@ -90,6 +90,28 @@ class ProtectedResourcesTest extends TestCase
             'id_autonomo' => $autonomo->id,
             'id_empresa' => $empresa->id,
         ]);
+    }
+
+    public function test_solicitacao_is_sent_only_to_autonomos_with_matching_specialty(): void
+    {
+        $empresa = $this->makeEmpresa();
+        $owner = $this->makeEmpresaUser($empresa);
+        $servico = $this->makeServico(['nome' => 'Elétrica', 'categoria' => 'Elétrica']);
+        $correto = $this->makeAutonomo(['especialidade' => 'Elétrica']);
+        $incorreto = $this->makeAutonomo(['especialidade' => 'Hidráulica']);
+        $this->makePivot($servico, $incorreto);
+
+        $response = $this->withHeaders($this->authHeaders($owner))
+            ->postJson('/api/solicitacoes', [
+                'id_servico' => $servico->id,
+                'descricao_problema' => 'Reparo no quadro elétrico.',
+            ])
+            ->assertCreated();
+
+        $this->assertSame(1, $response->json('quantidade_destinatarios'));
+        $this->assertSame([$correto->id], array_column($response->json('destinatarios'), 'id'));
+        $this->assertDatabaseHas('solicitacoes', ['id_autonomo' => $correto->id, 'id_servico' => $servico->id]);
+        $this->assertDatabaseMissing('solicitacoes', ['id_autonomo' => $incorreto->id, 'id_servico' => $servico->id]);
     }
 
     public function test_solicitacao_store_rejects_non_empresa_missing_description_and_invalid_ids(): void

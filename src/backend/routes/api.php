@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvaliacaoController;
 use App\Http\Controllers\AutonomoController;
 use App\Http\Controllers\EmpresaController;
-use App\Http\Controllers\NotificacaoController;
 use App\Http\Controllers\PagamentoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilePhotoController;
@@ -52,18 +51,7 @@ Route::middleware('auth:sanctum')->prefix('solicitacoes')->controller(Solicitaca
     Route::get('/{id}', 'show');
     Route::put('/{id}', 'update');
     Route::delete('/{id}', 'destroy');
-    Route::post('/{id}/responder', 'responder');
 });
-
-Route::middleware('auth:sanctum')->prefix('notificacoes')->controller(NotificacaoController::class)->group(function () {
-    Route::get('/', 'index');
-    Route::get('/contagem', 'contagem');
-    Route::post('/ler-todas', 'marcarTodasLidas');
-    Route::post('/{id}/lida', 'marcarLida');
-});
-
-Route::get('/fotos/{usuario}/{arquivo}', [ProfilePhotoController::class, 'show'])
-    ->where(['usuario' => '[0-9]+', 'arquivo' => '[A-Za-z0-9._-]+']);
 
 Route::middleware('auth:sanctum')->prefix('pagamentos')->controller(PagamentoController::class)->group(function () {
     Route::get('/', 'index');

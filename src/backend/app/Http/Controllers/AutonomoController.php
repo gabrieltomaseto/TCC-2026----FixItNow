@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Autonomo;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Rules\ValidadoresBrasil;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -16,8 +17,8 @@ class AutonomoController extends Controller
         if ($request->user()->tipo !== 'autonomo') abort(403, 'Apenas contas autônomas podem cadastrar autônomos.');
         $dados = $request->validate([
             'nome' => ['required', 'string', 'max:100'],
-            'cpf' => ['required', 'string', 'max:14', Rule::unique('autonomos', 'cpf')],
-            'telefone' => ['required', 'string', 'max:20'],
+            'cpf' => ['required', 'string', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::cpf((string) $value)) $fail('Informe um CPF válido.'); }, Rule::unique('autonomos', 'cpf')],
+            'telefone' => ['required', 'string', 'max:20', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::celular((string) $value)) $fail('Informe um telefone com DDD e 10 ou 11 dígitos.'); }],
             'email' => ['required', 'email', 'max:100', Rule::unique('autonomos', 'email'), Rule::unique('users', 'email')],
             'especialidade' => ['required', 'string', 'max:100'],
             'disponibilidade' => ['sometimes', 'nullable', 'string', 'max:100'],
@@ -39,8 +40,8 @@ class AutonomoController extends Controller
         $usuario = User::where('autonomo_id', $autonomo->id)->first();
         $dados = $request->validate([
             'nome' => ['sometimes', 'required', 'string', 'max:100'],
-            'cpf' => ['sometimes', 'required', 'string', 'max:14', Rule::unique('autonomos', 'cpf')->ignore($autonomo->id)],
-            'telefone' => ['sometimes', 'required', 'string', 'max:20'],
+            'cpf' => ['sometimes', 'required', 'string', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::cpf((string) $value)) $fail('Informe um CPF válido.'); }, Rule::unique('autonomos', 'cpf')->ignore($autonomo->id)],
+            'telefone' => ['sometimes', 'required', 'string', 'max:20', function ($attribute, $value, $fail) { if (!ValidadoresBrasil::celular((string) $value)) $fail('Informe um telefone com DDD e 10 ou 11 dígitos.'); }],
             'email' => [
                 'sometimes', 'required', 'email', 'max:100',
                 Rule::unique('autonomos', 'email')->ignore($autonomo->id),
