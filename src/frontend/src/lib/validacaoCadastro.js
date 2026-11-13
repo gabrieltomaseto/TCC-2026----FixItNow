@@ -24,26 +24,12 @@ export function formatarCnpj(valor) {
   return numeros.replace(/^(\d{2})(\d)/, "$1.$2").replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1/$2").replace(/(\d{4})(\d{1,2})$/, "$1-$2");
 }
 
-function validarDigitosVerificadores(valor, pesos) {
-  const soma = valor.split("").reduce((total, digito, indice) => total + Number(digito) * pesos[indice], 0);
-  const resto = soma % 11;
-  return String(resto < 2 ? 0 : 11 - resto);
-}
-
 export function cpfValido(valor) {
-  const cpf = somenteDigitos(valor);
-  if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-  const primeiro = validarDigitosVerificadores(cpf.slice(0, 9), [10, 9, 8, 7, 6, 5, 4, 3, 2]);
-  const segundo = validarDigitosVerificadores(cpf.slice(0, 9) + primeiro, [11, 10, 9, 8, 7, 6, 5, 4, 3, 2]);
-  return cpf.endsWith(primeiro + segundo);
+  return somenteDigitos(valor).length === 11;
 }
 
 export function cnpjValido(valor) {
-  const cnpj = somenteDigitos(valor);
-  if (cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
-  const primeiro = validarDigitosVerificadores(cnpj.slice(0, 12), [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-  const segundo = validarDigitosVerificadores(cnpj.slice(0, 12) + primeiro, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-  return cnpj.endsWith(primeiro + segundo);
+  return somenteDigitos(valor).length === 14;
 }
 
 export function celularValido(valor) {

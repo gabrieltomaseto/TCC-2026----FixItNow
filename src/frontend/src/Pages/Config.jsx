@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useConfig } from "../Context/ConfigContext"
+import { useConfig } from "../Context/useConfig"
 import AsidePainel from "../Components/AsidePainel"
 
 function Config() {
@@ -8,6 +8,7 @@ function Config() {
         tamanhoTexto, setTamanhoTexto, 
         altoContraste, setAltoContraste, 
         notificacoes, setNotificacoes,
+        idioma, setIdioma,
         tema, 
         tamanho, 
         contraste 
@@ -24,6 +25,7 @@ function Config() {
         setTamanhoTexto('normal')
         setAltoContraste(false)
         setNotificacoes(true)
+        setIdioma('pt-BR')
         setSalvo(true)
         setTimeout(() => setSalvo(false), 3000)
     }
@@ -64,6 +66,20 @@ function Config() {
                             </select>
                         </div>
 
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <label htmlFor="idioma" className="text-sm sm:text-base">Idioma</label>
+                            <select 
+                              className="rounded border border-gray-400 p-2 text-green-500 font-bold text-sm w-full sm:w-auto" 
+                              name="idioma" 
+                              id="idioma" 
+                              value={idioma} 
+                              onChange={(event) => setIdioma(event.target.value)}
+                            >
+                                <option value="pt-BR">Português (Brasil)</option>
+                                <option value="en-US">English (USA)</option>
+                                <option value="es-ES">Español</option>
+                            </select>
+                        </div>
                     </fieldset>
 
                     <hr className="border-gray-300 dark:border-gray-700" />

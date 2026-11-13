@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ConfigContext } from './ConfigContext'
+import { ConfigContext } from './config-context'
 
 const DARK_MODE_MIGRATION_KEY = 'fixitnow-dark-default-v2'
 

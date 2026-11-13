@@ -4,7 +4,7 @@ import AsidePainel from "../Components/AsidePainel";
 import { apiUrl, authHeaders, getSession } from "../lib/auth";
 
 const STATUS_CONCLUIDOS = ["Finalizada"];
-const STATUS_ABERTOS = ["Pendente", " Aceito"];
+const STATUS_ABERTOS = ["Pendente", "Aberta"];
 
 function statusClass(status) {
   if (status === "Finalizada") return "bg-green-100 text-green-800";
@@ -110,7 +110,9 @@ function Painel() {
                 Olá
               </span>
 
-              
+              <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center lg:w-11 lg:h-11">
+                👤
+              </div>
             </div>
           </header>
 
@@ -127,7 +129,7 @@ function Painel() {
                   <h3 className="font-semibold text-gray-700 dark:text-gray-300 text-sm">
                     SOLICITAÇÕES
                     <br />
-                    Aceita
+                    ABERTAS
                   </h3>
 
                   <span className="text-gray-400 text-lg">

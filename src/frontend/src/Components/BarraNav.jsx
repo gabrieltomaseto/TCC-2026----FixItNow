@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useConfig } from "../Context/ConfigContext";
+import { useConfig } from "../Context/useConfig";
 import { getSession, isEmpresa, profilePhotoUrl } from "../lib/auth";
 
 function BarraNav() {

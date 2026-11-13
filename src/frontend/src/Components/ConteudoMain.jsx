@@ -1,4 +1,4 @@
-
+import CardConteudo from "./CardConteudo";
 import contatos from "../Imagens/Contatos.png";
 import relogio from "../Imagens/Relogio.png";
 import tabela from "../Imagens/Tabela.png";
@@ -22,7 +22,7 @@ function ConteudoMain() {
              <p className="text-lg">Somos referência em agilidade de trabalho e de custo e beneficio.</p>      
 
              
-                          
+      <CardConteudo name='Trabalho profissional é aqui' img='https://blog.sismetro.com/upload/84439092864cbab087f46b2.85353192.jpg'/>                            
         </div>
 
       <div className="flex flex-col p-4 items-start">
@@ -30,7 +30,22 @@ function ConteudoMain() {
         <p className="text-lg">
           Hoje possuimos os serviços de manutenção de assistencia e manutenção de fiação elétrica, hidráulica, pintura, calibragem de máquinas industriais e muito mais!
         </p>
+       
+      <CardConteudo 
+      custom='flex flex-row-reverse py-7'
+       name='- Profissionais qualificados' img={contatos}
+       />
 
+       <CardConteudo 
+      custom='flex flex-row-reverse py-7'
+       name='- Rápido e eficiente' 
+       img={relogio}
+       />
+
+       <CardConteudo 
+      custom='flex flex-row-reverse py-7 '
+       name='- Serviço de qualidade' img={tabela}
+       />
 
    
         
