@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { useConfig } from "./Context/useConfig";
+import { useConfig } from "./Context/ConfigContext";
 import { getSession } from "./lib/auth";
 import ConteudoMain from "./Components/ConteudoMain";
 import Rodape from "./Components/Rodape";
